@@ -1,0 +1,112 @@
+{
+  "ca_par_ville_mad": {
+    "Casablanca": 2441036.72,
+    "Marrakech": 1252086.8,
+    "Agadir": 1066986.41,
+    "Rabat": 1003432.78,
+    "Tanger": 953252.19,
+    "Fes": 872019.55,
+    "Oujda": 833093.75,
+    "Meknes": 377737.33
+  },
+  "ca_total_mad": 8799645.53,
+  "ca_naif_sans_dedup_mad": {
+    "Oujda": 851804.02,
+    "Agadir": 1089938.34,
+    "Rabat": 1025606.34,
+    "Casablanca": 2488993.49,
+    "Meknes": 386011.88,
+    "Tanger": 976258.05,
+    "Fes": 888223.34,
+    "Marrakech": 1275235.66
+  },
+  "panier_moyen_par_ville": {
+    "Agadir": {
+      "commandes": 5407,
+      "ca_mad": 1066986.41,
+      "panier_moyen_mad": 197.33
+    },
+    "Marrakech": {
+      "commandes": 6399,
+      "ca_mad": 1252086.8,
+      "panier_moyen_mad": 195.67
+    },
+    "Tanger": {
+      "commandes": 4893,
+      "ca_mad": 953252.19,
+      "panier_moyen_mad": 194.82
+    },
+    "Casablanca": {
+      "commandes": 12592,
+      "ca_mad": 2441036.72,
+      "panier_moyen_mad": 193.86
+    },
+    "Fes": {
+      "commandes": 4599,
+      "ca_mad": 872019.55,
+      "panier_moyen_mad": 189.61
+    },
+    "Meknes": {
+      "commandes": 2046,
+      "ca_mad": 377737.33,
+      "panier_moyen_mad": 184.62
+    },
+    "Rabat": {
+      "commandes": 5498,
+      "ca_mad": 1003432.78,
+      "panier_moyen_mad": 182.51
+    },
+    "Oujda": {
+      "commandes": 4594,
+      "ca_mad": 833093.75,
+      "panier_moyen_mad": 181.34
+    }
+  },
+  "top5_restaurants": [
+    {
+      "rang": 1,
+      "restaurant_id": "R-157",
+      "name": "Bab Fassia Dakhla",
+      "city": "Agadir",
+      "category": "marocain",
+      "commandes_livrees": 1863,
+      "ca_mad": 416203.57
+    },
+    {
+      "rang": 2,
+      "restaurant_id": "R-188",
+      "name": "Forno Roma Lazaret",
+      "city": "Oujda",
+      "category": "pizza",
+      "commandes_livrees": 1157,
+      "ca_mad": 242785.2
+    },
+    {
+      "rang": 3,
+      "restaurant_id": "R-013",
+      "name": "Shawarma Express Maarif",
+      "city": "Casablanca",
+      "category": "shawarma",
+      "commandes_livrees": 904,
+      "ca_mad": 106559.56
+    },
+    {
+      "rang": 4,
+      "restaurant_id": "R-147",
+      "name": "Smash Spot Iberia",
+      "city": "Tanger",
+      "category": "burger",
+      "commandes_livrees": 890,
+      "ca_mad": 154244.92
+    },
+    {
+      "rang": 5,
+      "restaurant_id": "R-012",
+      "name": "Forno Mamma Oasis",
+      "city": "Casablanca",
+      "category": "pizza",
+      "commandes_livrees": 728,
+      "ca_mad": 152653.9
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+[NbConvertApp] Converting notebook 02_rdd.ipynb to notebook
+[IPKernelApp] WARNING | Kernel is running over TCP without encryption. All communication (including code and outputs) is sent in plain text and is susceptible to eavesdropping. Use IPC transport or launch with kernel manager-provisioned CurveZMQ keys to enable transport encryption.
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+26/11/14 17:36:12 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+26/11/14 17:36:22 WARN MetricsConfig: Cannot locate configuration: tried hadoop-metrics2-s3a-file-system.properties,hadoop-metrics2.properties
+[Stage 0:>                                                          (0 + 8) / 8][Stage 0:=============================>                             (4 + 4) / 8]                                                                                [Stage 1:>                                                          (0 + 8) / 8][Stage 1:======================>                                    (3 + 5) / 8]                                                                                [Stage 3:>                                                          (0 + 8) / 8][Stage 3:============================================>              (6 + 2) / 8]                                                                                [Stage 4:>                                                          (0 + 8) / 8][Stage 4:============================================>              (6 + 2) / 8][Stage 5:>                                                          (0 + 8) / 8]                                                                                [Stage 9:======================>                                    (3 + 5) / 8][Stage 10:===========================================>              (6 + 2) / 8]                                                                                [Stage 11:>                                                         (0 + 8) / 8][Stage 11:==================================================>       (7 + 1) / 8]                                                                                [Stage 15:==================================================>       (7 + 1) / 8]                                                                                [Stage 16:>                                                         (0 + 2) / 2]                                                                                [Stage 34:>                                                         (0 + 8) / 8][Stage 34:==============>                                           (2 + 6) / 8]                                                                                [Stage 37:>                                                         (0 + 8) / 8][Stage 37:=======>                                                  (1 + 7) / 8][Stage 37:==================================================>       (7 + 1) / 8]                                                                                [Stage 40:>                                                         (0 + 8) / 8]                                                                                [Stage 43:=====================>                                    (3 + 5) / 8]                                                                                [Stage 46:>                                                         (0 + 8) / 8]                                                                                [Stage 49:>                                                         (0 + 8) / 8]                                                                                26/11/14 17:37:04 WARN JavaUtils: Attempt to delete using native Unix OS command failed for path = /tmp/spark-bc8d4c2d-d6fd-46c0-bcc4-771d5ae4f649. Falling back to Java IO way
+java.io.IOException: Failed to delete: /tmp/spark-bc8d4c2d-d6fd-46c0-bcc4-771d5ae4f649
+	at org.apache.spark.network.util.JavaUtils.deleteRecursivelyUsingUnixNative(JavaUtils.java:174)
+	at org.apache.spark.network.util.JavaUtils.deleteRecursively(JavaUtils.java:109)
+	at org.apache.spark.network.util.JavaUtils.deleteRecursively(JavaUtils.java:90)
+	at org.apache.spark.util.SparkFileUtils.deleteRecursively(SparkFileUtils.scala:121)
+	at org.apache.spark.util.SparkFileUtils.deleteRecursively$(SparkFileUtils.scala:120)
+	at org.apache.spark.util.Utils$.deleteRecursively(Utils.scala:1126)
+	at org.apache.spark.util.ShutdownHookManager$.$anonfun$new$4(ShutdownHookManager.scala:65)
+	at org.apache.spark.util.ShutdownHookManager$.$anonfun$new$4$adapted(ShutdownHookManager.scala:62)
+	at scala.collection.IndexedSeqOptimized.foreach(IndexedSeqOptimized.scala:36)
+	at scala.collection.IndexedSeqOptimized.foreach$(IndexedSeqOptimized.scala:33)
+	at scala.collection.mutable.ArrayOps$ofRef.foreach(ArrayOps.scala:198)
+	at org.apache.spark.util.ShutdownHookManager$.$anonfun$new$2(ShutdownHookManager.scala:62)
+	at org.apache.spark.util.SparkShutdownHook.run(ShutdownHookManager.scala:214)
+	at org.apache.spark.util.SparkShutdownHookManager.$anonfun$runAll$2(ShutdownHookManager.scala:188)
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)
+	at org.apache.spark.util.Utils$.logUncaughtExceptions(Utils.scala:1928)
+	at org.apache.spark.util.SparkShutdownHookManager.$anonfun$runAll$1(ShutdownHookManager.scala:188)
+	at scala.runtime.java8.JFunction0$mcV$sp.apply(JFunction0$mcV$sp.java:23)
+	at scala.util.Try$.apply(Try.scala:213)
+	at org.apache.spark.util.SparkShutdownHookManager.runAll(ShutdownHookManager.scala:188)
+	at org.apache.spark.util.SparkShutdownHookManager$$anon$2.run(ShutdownHookManager.scala:178)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:840)
+[NbConvertApp] Writing 51118 bytes to 02_rdd.ipynb
+EXIT=0

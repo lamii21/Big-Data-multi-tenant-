@@ -1,0 +1,186 @@
+{
+  "app_id": "app-20261114173614-0002",
+  "spark_version": "3.5.9",
+  "master": "spark://spark-master:7077",
+  "default_parallelism": 2,
+  "timings_s": {
+    "1_count_lignes_brutes": 9.297,
+    "1_count_evenements_parses": 0.959,
+    "2_count_delivered_brut": 0.799,
+    "2_count_delivered_dedup_mise_en_cache": 3.181,
+    "2_count_delivered_depuis_cache": 0.428,
+    "3_ca_par_ville": 1.184,
+    "4_panier_moyen_aggregateByKey": 1.236,
+    "5_top5_takeOrdered": 0.971,
+    "5_top5_sortBy_take": 1.512,
+    "7_hostname_par_partition": 0.49
+  },
+  "partitions": 8,
+  "lines": 150281,
+  "events": 150281,
+  "delivered_raw": 46977,
+  "delivered_unique": 46028,
+  "tasks_by_worker": {
+    "sbd-spark-worker-2": 82,
+    "sbd-spark-worker-1": 82
+  },
+  "partition_hosts": {
+    "0": "spark-worker-1",
+    "1": "spark-worker-2",
+    "2": "spark-worker-2",
+    "3": "spark-worker-1",
+    "4": "spark-worker-1",
+    "5": "spark-worker-2",
+    "6": "spark-worker-2",
+    "7": "spark-worker-1"
+  },
+  "jobs": [
+    {
+      "job_id": 0,
+      "description": "P2-1 lecture + parsing",
+      "stages": 1,
+      "skipped_stages": 0,
+      "tasks": 8,
+      "status": "SUCCEEDED"
+    },
+    {
+      "job_id": 1,
+      "description": "P2-1 lecture + parsing",
+      "stages": 1,
+      "skipped_stages": 0,
+      "tasks": 8,
+      "status": "SUCCEEDED"
+    },
+    {
+      "job_id": 2,
+      "description": "P2-1 lecture + parsing",
+      "stages": 1,
+      "skipped_stages": 0,
+      "tasks": 1,
+      "status": "SUCCEEDED"
+    },
+    {
+      "job_id": 3,
+      "description": "P2-2 filtre DELIVERED + dédoublonnage + cache",
+      "stages": 1,
+      "skipped_stages": 0,
+      "tasks": 8,
+      "status": "SUCCEEDED"
+    },
+    {
+      "job_id": 4,
+      "description": "P2-2 filtre DELIVERED + dédoublonnage + cache",
+      "stages": 2,
+      "skipped_stages": 0,
+      "tasks": 16,
+      "status": "SUCCEEDED"
+    },
+    {
+      "job_id": 5,
+      "description": "P2-2 filtre DELIVERED + dédoublonnage + cache",
+      "stages": 2,
+      "skipped_stages": 1,
+      "tasks": 16,
+      "status": "SUCCEEDED"
+    },
+    {
+      "job_id": 6,
+      "description": "P2-3 CA par ville (map + reduceByKey)",
+      "stages": 3,
+      "skipped_stages": 1,
+      "tasks": 24,
+      "status": "SUCCEEDED"
+    },
+    {
+      "job_id": 7,
+      "description": "P2-3b CA naïf (sans dédoublonnage)",
+      "stages": 2,
+      "skipped_stages": 0,
+      "tasks": 16,
+      "status": "SUCCEEDED"
+    },
+    {
+      "job_id": 8,
+      "description": "P2-4 panier moyen (aggregateByKey)",
+      "stages": 3,
+      "skipped_stages": 1,
+      "tasks": 24,
+      "status": "SUCCEEDED"
+    },
+    {
+      "job_id": 9,
+      "description": "P2-5 chargement du référentiel (broadcast)",
+      "stages": 1,
+      "skipped_stages": 0,
+      "tasks": 2,
+      "status": "SUCCEEDED"
+    },
+    {
+      "job_id": 10,
+      "description": "P2-5a top 5 restaurants (takeOrdered)",
+      "stages": 3,
+      "skipped_stages": 1,
+      "tasks": 24,
+      "status": "SUCCEEDED"
+    },
+    {
+      "job_id": 11,
+      "description": "P2-5b top 5 restaurants (sortBy + take)",
+      "stages": 3,
+      "skipped_stages": 2,
+      "tasks": 24,
+      "status": "SUCCEEDED"
+    },
+    {
+      "job_id": 12,
+      "description": "P2-5b top 5 restaurants (sortBy + take)",
+      "stages": 3,
+      "skipped_stages": 2,
+      "tasks": 24,
+      "status": "SUCCEEDED"
+    },
+    {
+      "job_id": 13,
+      "description": "P2-5b top 5 restaurants (sortBy + take)",
+      "stages": 4,
+      "skipped_stages": 2,
+      "tasks": 25,
+      "status": "SUCCEEDED"
+    },
+    {
+      "job_id": 14,
+      "description": "P2-5c CA des restaurants du top 5",
+      "stages": 3,
+      "skipped_stages": 1,
+      "tasks": 24,
+      "status": "SUCCEEDED"
+    },
+    {
+      "job_id": 15,
+      "description": "P2-7 preuve de distribution",
+      "stages": 1,
+      "skipped_stages": 0,
+      "tasks": 8,
+      "status": "SUCCEEDED"
+    }
+  ],
+  "benchmark_ca_par_ville_rdd": {
+    "description": "textFile S3 -> json.loads -> filter DELIVERED -> dedup order_id -> reduceByKey ville, sans cache",
+    "runs_s": [
+      1.917,
+      1.578,
+      1.489,
+      1.729,
+      1.577
+    ],
+    "median_s": 1.578,
+    "min_s": 1.489,
+    "max_s": 1.917
+  },
+  "controle_python": {
+    "ca_ok": true,
+    "avg_ok": true,
+    "top5_ok": true,
+    "duree_s": 5.583
+  }
+}

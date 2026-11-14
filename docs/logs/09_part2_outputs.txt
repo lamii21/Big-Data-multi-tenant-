@@ -1,0 +1,177 @@
+----- [cellule p2-01]
+Spark 3.5.9 | master=spark://spark-master:7077 | app=part2-rdd (app-20261114173614-0002)
+defaultParallelism=8 | executors=4
+Spark UI : http://jupyter:4040  (depuis l'hôte : http://localhost:4040)
+----- [cellule p2-03]
+⏱  1_count_lignes_brutes                       9.297 s
+⏱  1_count_evenements_parses                   0.959 s
+
+Partitions du RDD      : 8
+Lignes brutes          : 150281
+Événements parsés      : 150281
+Lignes invalides       : 0
+
+Premier événement      : {'order_id': 'ORD-0000001', 'restaurant_id': 'R-107', 'customer_id': 'C-10039', 'city': 'Marrakech', 'status': 'CREATED', 'amount_mad': 114.41, 'items_count': 2, 'distance_km': 12.6, 'courier_id': 'L-MAR-05', 'event_time': '2026-09-30T23:00:23Z'}
+----- [cellule p2-05]
+⏱  2_count_delivered_brut                      0.799 s
+⏱  2_count_delivered_dedup_mise_en_cache       3.181 s
+⏱  2_count_delivered_depuis_cache              0.428 s
+
+DELIVERED (brut, avec doublons) : 46977
+DELIVERED (commandes uniques)   : 46028
+Doublons DELIVERED écartés      : 949
+----- [cellule p2-07]
+⏱  3_ca_par_ville                              1.184 s
+
+Ville               CA (MAD)    Part     CA naïf (MAD)       Écart
+------------------------------------------------------------------
+Casablanca      2,441,036.72   27.7%      2,488,993.49   47,956.77
+Marrakech       1,252,086.80   14.2%      1,275,235.66   23,148.86
+Agadir          1,066,986.41   12.1%      1,089,938.34   22,951.93
+Rabat           1,003,432.78   11.4%      1,025,606.34   22,173.56
+Tanger            953,252.19   10.8%        976,258.05   23,005.86
+Fes               872,019.55    9.9%        888,223.34   16,203.79
+Oujda             833,093.75    9.5%        851,804.02   18,710.27
+Meknes            377,737.33    4.3%        386,011.88    8,274.55
+------------------------------------------------------------------
+TOTAL           8,799,645.53    100%      8,982,071.12  182,425.59
+----- [cellule p2-09]
+⏱  4_panier_moyen_aggregateByKey               1.236 s
+
+Ville         Commandes        CA (MAD)   Panier moyen (MAD)
+------------------------------------------------------------
+Agadir            5,407    1,066,986.41               197.33
+Marrakech         6,399    1,252,086.80               195.67
+Tanger            4,893      953,252.19               194.82
+Casablanca       12,592    2,441,036.72               193.86
+Fes               4,599      872,019.55               189.61
+Meknes            2,046      377,737.33               184.62
+Rabat             5,498    1,003,432.78               182.51
+Oujda             4,594      833,093.75               181.34
+------------------------------------------------------------
+GLOBAL           46,028    8,799,645.53               191.18
+
+✔ Cohérence : CA identique à l'étape 3 et 46028 commandes = DELIVERED uniques
+----- [cellule p2-11]
+⏱  5_top5_takeOrdered                          0.971 s
+⏱  5_top5_sortBy_take                          1.512 s
+
+#  ID     Restaurant                    Ville       Catégorie   Livrées      CA (MAD)
+-------------------------------------------------------------------------------------
+1  R-157  Bab Fassia Dakhla             Agadir      marocain       1863    416,203.57
+2  R-188  Forno Roma Lazaret            Oujda       pizza          1157    242,785.20
+3  R-013  Shawarma Express Maarif       Casablanca  shawarma        904    106,559.56
+4  R-147  Smash Spot Iberia             Tanger      burger          890    154,244.92
+5  R-012  Forno Mamma Oasis             Casablanca  pizza           728    152,653.90
+
+✔ takeOrdered et sortBy + take donnent le même classement
+----- [cellule p2-13]
+===== ca_by_city_rdd   (étape 3)
+(8) PythonRDD[17] at collect at /tmp/ipykernel_1013/26165073.py:6 []
+ |  MapPartitionsRDD[16] at mapPartitions at PythonRDD.scala:160 []
+ |  ShuffledRDD[15] at partitionBy at NativeMethodAccessorImpl.java:0 []
+ +-(8) PairwiseRDD[14] at reduceByKey at /tmp/ipykernel_1013/26165073.py:3 []
+    |  PythonRDD[13] at reduceByKey at /tmp/ipykernel_1013/26165073.py:3 []
+    |  PythonRDD[9] at RDD at PythonRDD.scala:53 []
+    |      CachedPartitions: 8; MemorySize: 2.4 MiB; DiskSize: 0.0 B
+    |  MapPartitionsRDD[8] at mapPartitions at PythonRDD.scala:160 []
+    |  ShuffledRDD[7] at partitionBy at NativeMethodAccessorImpl.java:0 []
+    +-(8) PairwiseRDD[6] at reduceByKey at /tmp/ipykernel_1013/1229517039.py:4 []
+       |  PythonRDD[5] at reduceByKey at /tmp/ipykernel_1013/1229517039.py:4 []
+       |  s3a://lake/bronze/history/orders_history.jsonl MapPartitionsRDD[1] at textFile at NativeMethodAccessorImpl.java:0 []
+       |  s3a://lake/bronze/history/orders_history.jsonl HadoopRDD[0] at textFile at NativeMethodAccessorImpl.java:0 []
+
+===== avg_basket_rdd   (étape 4)
+(8) PythonRDD[27] at collect at /tmp/ipykernel_1013/4221509499.py:18 []
+ |  MapPartitionsRDD[26] at mapPartitions at PythonRDD.scala:160 []
+ |  ShuffledRDD[25] at partitionBy at NativeMethodAccessorImpl.java:0 []
+ +-(8) PairwiseRDD[24] at aggregateByKey at /tmp/ipykernel_1013/4221509499.py:14 []
+    |  PythonRDD[23] at aggregateByKey at /tmp/ipykernel_1013/4221509499.py:14 []
+    |  PythonRDD[9] at RDD at PythonRDD.scala:53 []
+    |      CachedPartitions: 8; MemorySize: 2.4 MiB; DiskSize: 0.0 B
+    |  MapPartitionsRDD[8] at mapPartitions at PythonRDD.scala:160 []
+    |  ShuffledRDD[7] at partitionBy at NativeMethodAccessorImpl.java:0 []
+    +-(8) PairwiseRDD[6] at reduceByKey at /tmp/ipykernel_1013/1229517039.py:4 []
+       |  PythonRDD[5] at reduceByKey at /tmp/ipykernel_1013/1229517039.py:4 []
+       |  s3a://lake/bronze/history/orders_history.jsonl MapPartitionsRDD[1] at textFile at NativeMethodAccessorImpl.java:0 []
+       |  s3a://lake/bronze/history/orders_history.jsonl HadoopRDD[0] at textFile at NativeMethodAccessorImpl.java:0 []
+
+===== count_by_rest    (étape 5)
+(8) PythonRDD[48] at RDD at PythonRDD.scala:53 []
+ |  MapPartitionsRDD[34] at mapPartitions at PythonRDD.scala:160 []
+ |  ShuffledRDD[33] at partitionBy at NativeMethodAccessorImpl.java:0 []
+ +-(8) PairwiseRDD[32] at reduceByKey at /tmp/ipykernel_1013/2740491514.py:8 []
+    |  PythonRDD[31] at reduceByKey at /tmp/ipykernel_1013/2740491514.py:8 []
+    |  PythonRDD[9] at RDD at PythonRDD.scala:53 []
+    |      CachedPartitions: 8; MemorySize: 2.4 MiB; DiskSize: 0.0 B
+    |  MapPartitionsRDD[8] at mapPartitions at PythonRDD.scala:160 []
+    |  ShuffledRDD[7] at partitionBy at NativeMethodAccessorImpl.java:0 []
+    +-(8) PairwiseRDD[6] at reduceByKey at /tmp/ipykernel_1013/1229517039.py:4 []
+       |  PythonRDD[5] at reduceByKey at /tmp/ipykernel_1013/1229517039.py:4 []
+       |  s3a://lake/bronze/history/orders_history.jsonl MapPartitionsRDD[1] at textFile at NativeMethodAccessorImpl.java:0 []
+       |  s3a://lake/bronze/history/orders_history.jsonl HadoopRDD[0] at textFile at NativeMethodAccessorImpl.java:0 []
+
+----- [cellule p2-16]
+⏱  7_hostname_par_partition                    0.490 s
+Partition  Worker             Lignes
+        0  spark-worker-1     18,782
+        1  spark-worker-2     18,785
+        2  spark-worker-2     18,789
+        3  spark-worker-1     18,789
+        4  spark-worker-1     18,787
+        5  spark-worker-2     18,787
+        6  spark-worker-2     18,780
+        7  spark-worker-1     18,782
+
+Workers ayant traité des partitions : ['spark-worker-1', 'spark-worker-2']
+
+Executor  Adresse               Worker             Cœurs  Tâches  Shuffle R (Ko)  Shuffle W (Ko)
+0         172.22.0.9:45681      sbd-spark-worker-2     2      42           661.9           653.9
+1         172.22.0.9:36421      sbd-spark-worker-2     2      40           658.7           650.8
+2         172.22.0.8:41109      sbd-spark-worker-1     2      42           664.2           646.7
+3         172.22.0.8:40683      sbd-spark-worker-1     2      40           668.3           655.5
+driver    jupyter:37127         jupyter                0       0             0.0             0.0
+
+Tâches par worker : {'sbd-spark-worker-2': 82, 'sbd-spark-worker-1': 82}
+✔ Les deux workers ont exécuté des tâches
+----- [cellule p2-17]
+ Job  Description                                      Stages Ignorés Tâches  Statut
+   0  P2-1 lecture + parsing                                1       0      8  SUCCEEDED
+   1  P2-1 lecture + parsing                                1       0      8  SUCCEEDED
+   2  P2-1 lecture + parsing                                1       0      1  SUCCEEDED
+   3  P2-2 filtre DELIVERED + dédoublonnage + cache         1       0      8  SUCCEEDED
+   4  P2-2 filtre DELIVERED + dédoublonnage + cache         2       0     16  SUCCEEDED
+   5  P2-2 filtre DELIVERED + dédoublonnage + cache         2       1     16  SUCCEEDED
+   6  P2-3 CA par ville (map + reduceByKey)                 3       1     24  SUCCEEDED
+   7  P2-3b CA naïf (sans dédoublonnage)                    2       0     16  SUCCEEDED
+   8  P2-4 panier moyen (aggregateByKey)                    3       1     24  SUCCEEDED
+   9  P2-5 chargement du référentiel (broadcast)            1       0      2  SUCCEEDED
+  10  P2-5a top 5 restaurants (takeOrdered)                 3       1     24  SUCCEEDED
+  11  P2-5b top 5 restaurants (sortBy + take)               3       2     24  SUCCEEDED
+  12  P2-5b top 5 restaurants (sortBy + take)               3       2     24  SUCCEEDED
+  13  P2-5b top 5 restaurants (sortBy + take)               4       2     25  SUCCEEDED
+  14  P2-5c CA des restaurants du top 5                     3       1     24  SUCCEEDED
+  15  P2-7 preuve de distribution                           1       0      8  SUCCEEDED
+----- [cellule p2-19]
+Durées (s) : [1.917, 1.578, 1.489, 1.729, 1.577]
+Médiane    : 1.578 s
+----- [cellule p2-21]
+CA par ville identique      : True
+Panier moyen identique      : True
+Top 5 identique             : True
+Durée Python mono-thread    : 5.583 s (fichier local, sans réseau)
+----- [cellule p2-23]
+Temps mesurés (s) :
+  1_count_lignes_brutes                        9.297
+  1_count_evenements_parses                    0.959
+  2_count_delivered_brut                       0.799
+  2_count_delivered_dedup_mise_en_cache        3.181
+  2_count_delivered_depuis_cache               0.428
+  3_ca_par_ville                               1.184
+  4_panier_moyen_aggregateByKey                1.236
+  5_top5_takeOrdered                           0.971
+  5_top5_sortBy_take                           1.512
+  7_hostname_par_partition                     0.490
+  benchmark CA (médiane sur 5)                 1.578
+----- [cellule p2-24]
+SparkSession arrêtée — DAG disponibles dans le History Server (http://localhost:18080)

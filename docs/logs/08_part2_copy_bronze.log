@@ -1,0 +1,37 @@
+## Source locale
+-rw-r--r-- 1 lamia 197609 33964941 Nov 14 17:06 data/generated/orders_history.jsonl
+57142d2dce9a7c62af57ad79b068882fdb107c1ab32bf6d305c073e2c6adad25 *data/generated/orders_history.jsonl
+
+## Copie : cat orders_history.jsonl | mc pipe local/lake/bronze/history/orders_history.jsonl
+33964941 bytes -> `local/lake/bronze/history/orders_history.jsonl`
+copie OK
+
+## mc stat
+Name      : orders_history.jsonl
+Date      : 2026-11-14 17:30:59 UTC 
+Size      : 32 MiB 
+ETag      : c2c83bbd3f916179112d3506cb5efd09-1 
+Type      : file 
+Metadata  :
+  Content-Type: application/octet-stream 
+
+
+## Intégrité : sha256 relu depuis MinIO + nombre de lignes
+57142d2dce9a7c62af57ad79b068882fdb107c1ab32bf6d305c073e2c6adad25 *-
+150281
+
+## mc ls --recursive local/lake/
+[2026-11-14 16:17:01 UTC]     0B STANDARD _smoke_tests/part1/_SUCCESS
+[2026-11-14 16:17:00 UTC]   469B STANDARD _smoke_tests/part1/part-00000-1236a7b3-4ac4-4e25-813e-0cf92ec69ac4-c000.snappy.parquet
+[2026-11-14 16:17:00 UTC]   469B STANDARD _smoke_tests/part1/part-00001-1236a7b3-4ac4-4e25-813e-0cf92ec69ac4-c000.snappy.parquet
+[2026-11-14 16:17:00 UTC]   468B STANDARD _smoke_tests/part1/part-00002-1236a7b3-4ac4-4e25-813e-0cf92ec69ac4-c000.snappy.parquet
+[2026-11-14 16:17:00 UTC]   477B STANDARD _smoke_tests/part1/part-00003-1236a7b3-4ac4-4e25-813e-0cf92ec69ac4-c000.snappy.parquet
+[2026-11-14 16:17:00 UTC]   469B STANDARD _smoke_tests/part1/part-00004-1236a7b3-4ac4-4e25-813e-0cf92ec69ac4-c000.snappy.parquet
+[2026-11-14 16:17:00 UTC]   469B STANDARD _smoke_tests/part1/part-00005-1236a7b3-4ac4-4e25-813e-0cf92ec69ac4-c000.snappy.parquet
+[2026-11-14 16:17:00 UTC]   469B STANDARD _smoke_tests/part1/part-00006-1236a7b3-4ac4-4e25-813e-0cf92ec69ac4-c000.snappy.parquet
+[2026-11-14 16:17:00 UTC]   477B STANDARD _smoke_tests/part1/part-00007-1236a7b3-4ac4-4e25-813e-0cf92ec69ac4-c000.snappy.parquet
+[2026-11-14 16:13:58 UTC]    13B STANDARD bronze/.keep
+[2026-11-14 17:30:59 UTC]  32MiB STANDARD bronze/history/orders_history.jsonl
+[2026-11-14 16:13:59 UTC]    18B STANDARD checkpoints/.keep
+[2026-11-14 16:13:59 UTC]    11B STANDARD gold/.keep
+[2026-11-14 16:13:59 UTC]    13B STANDARD silver/.keep
