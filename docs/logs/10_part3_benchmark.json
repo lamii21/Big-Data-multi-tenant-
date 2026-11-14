@@ -1,0 +1,173 @@
+{
+  "conditions": {
+    "app_id": "app-20261114181835-0005",
+    "spark_version": "3.5.9",
+    "master": "spark://spark-master:7077",
+    "default_parallelism": 8,
+    "executors": [
+      "0",
+      "1",
+      "2",
+      "3"
+    ],
+    "spark.sql.shuffle.partitions": "8",
+    "spark.sql.adaptive.enabled": "true",
+    "spark.sql.autoBroadcastJoinThreshold": "10485760b"
+  },
+  "protocole": "1 chauffe + 5 passes entrelacées avec rotation de l'ordre ; métriques ramenées à une exécution",
+  "A_bout_en_bout_S3": {
+    "RDD": {
+      "runs_s": [
+        1.094,
+        0.726,
+        0.852,
+        0.847,
+        0.723
+      ],
+      "mediane_s": 0.847,
+      "moyenne_s": 0.848,
+      "ecart_type_s": 0.151,
+      "min_s": 0.723,
+      "max_s": 1.094,
+      "jobs": 1.0,
+      "stages": 3.0,
+      "stages_ignores": 0.0,
+      "taches": 24.0,
+      "temps_executors_s": 5.043,
+      "lecture_Mo": 34.42,
+      "shuffle_lu_Ko": 579.5,
+      "shuffle_ecrit_Ko": 579.5,
+      "acceleration_vs_RDD": 1.0
+    },
+    "DataFrame": {
+      "runs_s": [
+        0.369,
+        0.343,
+        0.37,
+        0.376,
+        0.277
+      ],
+      "mediane_s": 0.369,
+      "moyenne_s": 0.347,
+      "ecart_type_s": 0.041,
+      "min_s": 0.277,
+      "max_s": 0.376,
+      "jobs": 3.0,
+      "stages": 3.0,
+      "stages_ignores": 3.0,
+      "taches": 10.0,
+      "temps_executors_s": 0.93,
+      "lecture_Mo": 34.42,
+      "shuffle_lu_Ko": 837.9,
+      "shuffle_ecrit_Ko": 837.9,
+      "acceleration_vs_RDD": 2.3
+    },
+    "DataFrame sans AQE": {
+      "runs_s": [
+        0.375,
+        0.335,
+        0.321,
+        0.384,
+        0.269
+      ],
+      "mediane_s": 0.335,
+      "moyenne_s": 0.337,
+      "ecart_type_s": 0.046,
+      "min_s": 0.269,
+      "max_s": 0.384,
+      "jobs": 1.0,
+      "stages": 3.0,
+      "stages_ignores": 0.0,
+      "taches": 24.0,
+      "temps_executors_s": 1.18,
+      "lecture_Mo": 34.42,
+      "shuffle_lu_Ko": 841.1,
+      "shuffle_ecrit_Ko": 841.1,
+      "acceleration_vs_RDD": 2.53
+    },
+    "SQL": {
+      "runs_s": [
+        0.388,
+        0.343,
+        0.447,
+        0.357,
+        0.331
+      ],
+      "mediane_s": 0.357,
+      "moyenne_s": 0.373,
+      "ecart_type_s": 0.046,
+      "min_s": 0.331,
+      "max_s": 0.447,
+      "jobs": 3.0,
+      "stages": 3.0,
+      "stages_ignores": 3.0,
+      "taches": 10.0,
+      "temps_executors_s": 0.988,
+      "lecture_Mo": 34.42,
+      "shuffle_lu_Ko": 837.9,
+      "shuffle_ecrit_Ko": 837.9,
+      "acceleration_vs_RDD": 2.37
+    }
+  },
+  "B_donnees_en_cache": {
+    "RDD (cache)": {
+      "runs_s": [
+        0.637,
+        0.681,
+        0.7,
+        0.545,
+        0.533
+      ],
+      "mediane_s": 0.637,
+      "moyenne_s": 0.619,
+      "ecart_type_s": 0.077,
+      "min_s": 0.533,
+      "max_s": 0.7,
+      "jobs": 1.0,
+      "stages": 3.0,
+      "stages_ignores": 0.0,
+      "taches": 24.0,
+      "temps_executors_s": 3.758,
+      "lecture_Mo": 7.08,
+      "shuffle_lu_Ko": 579.5,
+      "shuffle_ecrit_Ko": 579.5,
+      "acceleration_vs_RDD": 1.0
+    },
+    "DataFrame (cache)": {
+      "runs_s": [
+        0.224,
+        0.309,
+        0.254,
+        0.21,
+        0.172
+      ],
+      "mediane_s": 0.224,
+      "moyenne_s": 0.234,
+      "ecart_type_s": 0.051,
+      "min_s": 0.172,
+      "max_s": 0.309,
+      "jobs": 3.0,
+      "stages": 3.0,
+      "stages_ignores": 3.0,
+      "taches": 10.0,
+      "temps_executors_s": 0.285,
+      "lecture_Mo": 6.98,
+      "shuffle_lu_Ko": 837.9,
+      "shuffle_ecrit_Ko": 837.9,
+      "acceleration_vs_RDD": 2.84
+    }
+  },
+  "partie2_benchmark_rdd_s": {
+    "description": "textFile S3 -> json.loads -> filter DELIVERED -> dedup order_id -> reduceByKey ville, sans cache",
+    "runs_s": [
+      1.917,
+      1.578,
+      1.489,
+      1.729,
+      1.577
+    ],
+    "median_s": 1.578,
+    "min_s": 1.489,
+    "max_s": 1.917
+  }
+}

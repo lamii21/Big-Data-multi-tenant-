@@ -1,0 +1,1074 @@
+
+====================================================================================================
+== jointure_explain_true
+====================================================================================================
+== Parsed Logical Plan ==
+'Sort ['ca_mad DESC NULLS LAST], true
++- Aggregate [category#23, city#3], [category#23, city#3, round(sum(amount_mad#5), 2) AS ca_mad#1840, count(1) AS commandes#1842L]
+   +- Project [restaurant_id#1, order_id#0, customer_id#2, city#3, status#4, amount_mad#5, items_count#6, distance_km#7, courier_id#8, event_time#9, restaurant_name#1810, category#23]
+      +- Join Inner, (restaurant_id#1 = restaurant_id#20)
+         :- Deduplicate [order_id#0]
+         :  +- Filter (status#4 = DELIVERED)
+         :     +- Relation [order_id#0,restaurant_id#1,customer_id#2,city#3,status#4,amount_mad#5,items_count#6,distance_km#7,courier_id#8,event_time#9] json
+         +- Project [restaurant_id#20, name#21 AS restaurant_name#1810, category#23]
+            +- Relation [restaurant_id#20,name#21,city#22,category#23,latitude#24,longitude#25] json
+
+== Analyzed Logical Plan ==
+category: string, city: string, ca_mad: double, commandes: bigint
+Sort [ca_mad#1840 DESC NULLS LAST], true
++- Aggregate [category#23, city#3], [category#23, city#3, round(sum(amount_mad#5), 2) AS ca_mad#1840, count(1) AS commandes#1842L]
+   +- Project [restaurant_id#1, order_id#0, customer_id#2, city#3, status#4, amount_mad#5, items_count#6, distance_km#7, courier_id#8, event_time#9, restaurant_name#1810, category#23]
+      +- Join Inner, (restaurant_id#1 = restaurant_id#20)
+         :- Deduplicate [order_id#0]
+         :  +- Filter (status#4 = DELIVERED)
+         :     +- Relation [order_id#0,restaurant_id#1,customer_id#2,city#3,status#4,amount_mad#5,items_count#6,distance_km#7,courier_id#8,event_time#9] json
+         +- Project [restaurant_id#20, name#21 AS restaurant_name#1810, category#23]
+            +- Relation [restaurant_id#20,name#21,city#22,category#23,latitude#24,longitude#25] json
+
+== Optimized Logical Plan ==
+Sort [ca_mad#1840 DESC NULLS LAST], true
++- Aggregate [category#23, city#1852], [category#23, city#1852, round(sum(amount_mad#1856), 2) AS ca_mad#1840, count(1) AS commandes#1842L]
+   +- Project [city#1852, amount_mad#1856, category#23]
+      +- Join Inner, (restaurant_id#1848 = restaurant_id#20)
+         :- Filter isnotnull(restaurant_id#1848)
+         :  +- Aggregate [order_id#0], [first(restaurant_id#1, false) AS restaurant_id#1848, first(city#3, false) AS city#1852, first(amount_mad#5, false) AS amount_mad#1856]
+         :     +- Project [order_id#0, restaurant_id#1, city#3, amount_mad#5]
+         :        +- Filter (isnotnull(status#4) AND (status#4 = DELIVERED))
+         :           +- Relation [order_id#0,restaurant_id#1,customer_id#2,city#3,status#4,amount_mad#5,items_count#6,distance_km#7,courier_id#8,event_time#9] json
+         +- Project [restaurant_id#20, category#23]
+            +- Filter isnotnull(restaurant_id#20)
+               +- Relation [restaurant_id#20,name#21,city#22,category#23,latitude#24,longitude#25] json
+
+== Physical Plan ==
+AdaptiveSparkPlan isFinalPlan=true
++- == Final Plan ==
+   *(6) Sort [ca_mad#1840 DESC NULLS LAST], true, 0
+   +- AQEShuffleRead coalesced
+      +- ShuffleQueryStage 3
+         +- Exchange rangepartitioning(ca_mad#1840 DESC NULLS LAST, 8), ENSURE_REQUIREMENTS, [plan_id=1185]
+            +- *(5) HashAggregate(keys=[category#23, city#1852], functions=[sum(amount_mad#1856), count(1)], output=[category#23, city#1852, ca_mad#1840, commandes#1842L])
+               +- AQEShuffleRead coalesced
+                  +- ShuffleQueryStage 2
+                     +- Exchange hashpartitioning(category#23, city#1852, 8), ENSURE_REQUIREMENTS, [plan_id=1144]
+                        +- *(4) HashAggregate(keys=[category#23, city#1852], functions=[partial_sum(amount_mad#1856), partial_count(1)], output=[category#23, city#1852, sum#1867, count#1868L])
+                           +- *(4) Project [city#1852, amount_mad#1856, category#23]
+                              +- *(4) BroadcastHashJoin [restaurant_id#1848], [restaurant_id#20], Inner, BuildRight, false
+                                 :- *(4) Filter isnotnull(restaurant_id#1848)
+                                 :  +- SortAggregate(key=[order_id#0], functions=[first(restaurant_id#1, false), first(city#3, false), first(amount_mad#5, false)], output=[restaurant_id#1848, city#1852, amount_mad#1856])
+                                 :     +- *(3) Sort [order_id#0 ASC NULLS FIRST], false, 0
+                                 :        +- AQEShuffleRead coalesced
+                                 :           +- ShuffleQueryStage 0
+                                 :              +- Exchange hashpartitioning(order_id#0, 8), ENSURE_REQUIREMENTS, [plan_id=1023]
+                                 :                 +- SortAggregate(key=[order_id#0], functions=[partial_first(restaurant_id#1, false), partial_first(city#3, false), partial_first(amount_mad#5, false)], output=[order_id#0, first#1875, valueSet#1876, first#1877, valueSet#1878, first#1879, valueSet#1880])
+                                 :                    +- *(1) Sort [order_id#0 ASC NULLS FIRST], false, 0
+                                 :                       +- *(1) Project [order_id#0, restaurant_id#1, city#3, amount_mad#5]
+                                 :                          +- *(1) Filter (isnotnull(status#4) AND (status#4 = DELIVERED))
+                                 :                             +- FileScan json [order_id#0,restaurant_id#1,city#3,status#4,amount_mad#5] Batched: false, DataFilters: [isnotnull(status#4), (status#4 = DELIVERED)], Format: JSON, Location: InMemoryFileIndex(1 paths)[s3a://lake/bronze/history/orders_history.jsonl], PartitionFilters: [], PushedFilters: [IsNotNull(status), EqualTo(status,DELIVERED)], ReadSchema: struct<order_id:string,restaurant_id:string,city:string,status:string,amount_mad:double>
+                                 +- BroadcastQueryStage 1
+                                    +- BroadcastExchange HashedRelationBroadcastMode(List(input[0, string, false]),false), [plan_id=1043]
+                                       +- *(2) Filter isnotnull(restaurant_id#20)
+                                          +- FileScan json [restaurant_id#20,category#23] Batched: false, DataFilters: [isnotnull(restaurant_id#20)], Format: JSON, Location: InMemoryFileIndex(1 paths)[file:/workspace/data/restaurants.json], PartitionFilters: [], PushedFilters: [IsNotNull(restaurant_id)], ReadSchema: struct<restaurant_id:string,category:string>
++- == Initial Plan ==
+   Sort [ca_mad#1840 DESC NULLS LAST], true, 0
+   +- Exchange rangepartitioning(ca_mad#1840 DESC NULLS LAST, 8), ENSURE_REQUIREMENTS, [plan_id=982]
+      +- HashAggregate(keys=[category#23, city#1852], functions=[sum(amount_mad#1856), count(1)], output=[category#23, city#1852, ca_mad#1840, commandes#1842L])
+         +- Exchange hashpartitioning(category#23, city#1852, 8), ENSURE_REQUIREMENTS, [plan_id=979]
+            +- HashAggregate(keys=[category#23, city#1852], functions=[partial_sum(amount_mad#1856), partial_count(1)], output=[category#23, city#1852, sum#1867, count#1868L])
+               +- Project [city#1852, amount_mad#1856, category#23]
+                  +- BroadcastHashJoin [restaurant_id#1848], [restaurant_id#20], Inner, BuildRight, false
+                     :- Filter isnotnull(restaurant_id#1848)
+                     :  +- SortAggregate(key=[order_id#0], functions=[first(restaurant_id#1, false), first(city#3, false), first(amount_mad#5, false)], output=[restaurant_id#1848, city#1852, amount_mad#1856])
+                     :     +- Sort [order_id#0 ASC NULLS FIRST], false, 0
+                     :        +- Exchange hashpartitioning(order_id#0, 8), ENSURE_REQUIREMENTS, [plan_id=969]
+                     :           +- SortAggregate(key=[order_id#0], functions=[partial_first(restaurant_id#1, false), partial_first(city#3, false), partial_first(amount_mad#5, false)], output=[order_id#0, first#1875, valueSet#1876, first#1877, valueSet#1878, first#1879, valueSet#1880])
+                     :              +- Sort [order_id#0 ASC NULLS FIRST], false, 0
+                     :                 +- Project [order_id#0, restaurant_id#1, city#3, amount_mad#5]
+                     :                    +- Filter (isnotnull(status#4) AND (status#4 = DELIVERED))
+                     :                       +- FileScan json [order_id#0,restaurant_id#1,city#3,status#4,amount_mad#5] Batched: false, DataFilters: [isnotnull(status#4), (status#4 = DELIVERED)], Format: JSON, Location: InMemoryFileIndex(1 paths)[s3a://lake/bronze/history/orders_history.jsonl], PartitionFilters: [], PushedFilters: [IsNotNull(status), EqualTo(status,DELIVERED)], ReadSchema: struct<order_id:string,restaurant_id:string,city:string,status:string,amount_mad:double>
+                     +- BroadcastExchange HashedRelationBroadcastMode(List(input[0, string, false]),false), [plan_id=974]
+                        +- Filter isnotnull(restaurant_id#20)
+                           +- FileScan json [restaurant_id#20,category#23] Batched: false, DataFilters: [isnotnull(restaurant_id#20)], Format: JSON, Location: InMemoryFileIndex(1 paths)[file:/workspace/data/restaurants.json], PartitionFilters: [], PushedFilters: [IsNotNull(restaurant_id)], ReadSchema: struct<restaurant_id:string,category:string>
+
+
+====================================================================================================
+== jointure_formatted
+====================================================================================================
+== Physical Plan ==
+AdaptiveSparkPlan (44)
++- == Final Plan ==
+   * Sort (26)
+   +- AQEShuffleRead (25)
+      +- ShuffleQueryStage (24), Statistics(sizeInBytes=3.3 KiB, rowCount=57)
+         +- Exchange (23)
+            +- * HashAggregate (22)
+               +- AQEShuffleRead (21)
+                  +- ShuffleQueryStage (20), Statistics(sizeInBytes=3.3 KiB, rowCount=57)
+                     +- Exchange (19)
+                        +- * HashAggregate (18)
+                           +- * Project (17)
+                              +- * BroadcastHashJoin Inner BuildRight (16)
+                                 :- * Filter (11)
+                                 :  +- SortAggregate (10)
+                                 :     +- * Sort (9)
+                                 :        +- AQEShuffleRead (8)
+                                 :           +- ShuffleQueryStage (7), Statistics(sizeInBytes=4.4 MiB, rowCount=4.60E+4)
+                                 :              +- Exchange (6)
+                                 :                 +- SortAggregate (5)
+                                 :                    +- * Sort (4)
+                                 :                       +- * Project (3)
+                                 :                          +- * Filter (2)
+                                 :                             +- Scan json  (1)
+                                 +- BroadcastQueryStage (15), Statistics(sizeInBytes=2.0 MiB, rowCount=200)
+                                    +- BroadcastExchange (14)
+                                       +- * Filter (13)
+                                          +- Scan json  (12)
++- == Initial Plan ==
+   Sort (43)
+   +- Exchange (42)
+      +- HashAggregate (41)
+         +- Exchange (40)
+            +- HashAggregate (39)
+               +- Project (38)
+                  +- BroadcastHashJoin Inner BuildRight (37)
+                     :- Filter (34)
+                     :  +- SortAggregate (33)
+                     :     +- Sort (32)
+                     :        +- Exchange (31)
+                     :           +- SortAggregate (30)
+                     :              +- Sort (29)
+                     :                 +- Project (28)
+                     :                    +- Filter (27)
+                     :                       +- Scan json  (1)
+                     +- BroadcastExchange (36)
+                        +- Filter (35)
+                           +- Scan json  (12)
+
+
+(1) Scan json 
+Output [5]: [order_id#0, restaurant_id#1, city#3, status#4, amount_mad#5]
+Batched: false
+Location: InMemoryFileIndex [s3a://lake/bronze/history/orders_history.jsonl]
+PushedFilters: [IsNotNull(status), EqualTo(status,DELIVERED)]
+ReadSchema: struct<order_id:string,restaurant_id:string,city:string,status:string,amount_mad:double>
+
+(2) Filter [codegen id : 1]
+Input [5]: [order_id#0, restaurant_id#1, city#3, status#4, amount_mad#5]
+Condition : (isnotnull(status#4) AND (status#4 = DELIVERED))
+
+(3) Project [codegen id : 1]
+Output [4]: [order_id#0, restaurant_id#1, city#3, amount_mad#5]
+Input [5]: [order_id#0, restaurant_id#1, city#3, status#4, amount_mad#5]
+
+(4) Sort [codegen id : 1]
+Input [4]: [order_id#0, restaurant_id#1, city#3, amount_mad#5]
+Arguments: [order_id#0 ASC NULLS FIRST], false, 0
+
+(5) SortAggregate
+Input [4]: [order_id#0, restaurant_id#1, city#3, amount_mad#5]
+Keys [1]: [order_id#0]
+Functions [3]: [partial_first(restaurant_id#1, false), partial_first(city#3, false), partial_first(amount_mad#5, false)]
+Aggregate Attributes [6]: [first#1869, valueSet#1870, first#1871, valueSet#1872, first#1873, valueSet#1874]
+Results [7]: [order_id#0, first#1875, valueSet#1876, first#1877, valueSet#1878, first#1879, valueSet#1880]
+
+(6) Exchange
+Input [7]: [order_id#0, first#1875, valueSet#1876, first#1877, valueSet#1878, first#1879, valueSet#1880]
+Arguments: hashpartitioning(order_id#0, 8), ENSURE_REQUIREMENTS, [plan_id=1023]
+
+(7) ShuffleQueryStage
+Output [7]: [order_id#0, first#1875, valueSet#1876, first#1877, valueSet#1878, first#1879, valueSet#1880]
+Arguments: 0
+
+(8) AQEShuffleRead
+Input [7]: [order_id#0, first#1875, valueSet#1876, first#1877, valueSet#1878, first#1879, valueSet#1880]
+Arguments: coalesced
+
+(9) Sort [codegen id : 3]
+Input [7]: [order_id#0, first#1875, valueSet#1876, first#1877, valueSet#1878, first#1879, valueSet#1880]
+Arguments: [order_id#0 ASC NULLS FIRST], false, 0
+
+(10) SortAggregate
+Input [7]: [order_id#0, first#1875, valueSet#1876, first#1877, valueSet#1878, first#1879, valueSet#1880]
+Keys [1]: [order_id#0]
+Functions [3]: [first(restaurant_id#1, false), first(city#3, false), first(amount_mad#5, false)]
+Aggregate Attributes [3]: [first(restaurant_id#1)()#1847, first(city#3)()#1851, first(amount_mad#5)()#1855]
+Results [3]: [first(restaurant_id#1)()#1847 AS restaurant_id#1848, first(city#3)()#1851 AS city#1852, first(amount_mad#5)()#1855 AS amount_mad#1856]
+
+(11) Filter [codegen id : 4]
+Input [3]: [restaurant_id#1848, city#1852, amount_mad#1856]
+Condition : isnotnull(restaurant_id#1848)
+
+(12) Scan json 
+Output [2]: [restaurant_id#20, category#23]
+Batched: false
+Location: InMemoryFileIndex [file:/workspace/data/restaurants.json]
+PushedFilters: [IsNotNull(restaurant_id)]
+ReadSchema: struct<restaurant_id:string,category:string>
+
+(13) Filter [codegen id : 2]
+Input [2]: [restaurant_id#20, category#23]
+Condition : isnotnull(restaurant_id#20)
+
+(14) BroadcastExchange
+Input [2]: [restaurant_id#20, category#23]
+Arguments: HashedRelationBroadcastMode(List(input[0, string, false]),false), [plan_id=1043]
+
+(15) BroadcastQueryStage
+Output [2]: [restaurant_id#20, category#23]
+Arguments: 1
+
+(16) BroadcastHashJoin [codegen id : 4]
+Left keys [1]: [restaurant_id#1848]
+Right keys [1]: [restaurant_id#20]
+Join type: Inner
+Join condition: None
+
+(17) Project [codegen id : 4]
+Output [3]: [city#1852, amount_mad#1856, category#23]
+Input [5]: [restaurant_id#1848, city#1852, amount_mad#1856, restaurant_id#20, category#23]
+
+(18) HashAggregate [codegen id : 4]
+Input [3]: [city#1852, amount_mad#1856, category#23]
+Keys [2]: [category#23, city#1852]
+Functions [2]: [partial_sum(amount_mad#1856), partial_count(1)]
+Aggregate Attributes [2]: [sum#1865, count#1866L]
+Results [4]: [category#23, city#1852, sum#1867, count#1868L]
+
+(19) Exchange
+Input [4]: [category#23, city#1852, sum#1867, count#1868L]
+Arguments: hashpartitioning(category#23, city#1852, 8), ENSURE_REQUIREMENTS, [plan_id=1144]
+
+(20) ShuffleQueryStage
+Output [4]: [category#23, city#1852, sum#1867, count#1868L]
+Arguments: 2
+
+(21) AQEShuffleRead
+Input [4]: [category#23, city#1852, sum#1867, count#1868L]
+Arguments: coalesced
+
+(22) HashAggregate [codegen id : 5]
+Input [4]: [category#23, city#1852, sum#1867, count#1868L]
+Keys [2]: [category#23, city#1852]
+Functions [2]: [sum(amount_mad#1856), count(1)]
+Aggregate Attributes [2]: [sum(amount_mad#1856)#1839, count(1)#1841L]
+Results [4]: [category#23, city#1852, round(sum(amount_mad#1856)#1839, 2) AS ca_mad#1840, count(1)#1841L AS commandes#1842L]
+
+(23) Exchange
+Input [4]: [category#23, city#1852, ca_mad#1840, commandes#1842L]
+Arguments: rangepartitioning(ca_mad#1840 DESC NULLS LAST, 8), ENSURE_REQUIREMENTS, [plan_id=1185]
+
+(24) ShuffleQueryStage
+Output [4]: [category#23, city#1852, ca_mad#1840, commandes#1842L]
+Arguments: 3
+
+(25) AQEShuffleRead
+Input [4]: [category#23, city#1852, ca_mad#1840, commandes#1842L]
+Arguments: coalesced
+
+(26) Sort [codegen id : 6]
+Input [4]: [category#23, city#1852, ca_mad#1840, commandes#1842L]
+Arguments: [ca_mad#1840 DESC NULLS LAST], true, 0
+
+(27) Filter
+Input [5]: [order_id#0, restaurant_id#1, city#3, status#4, amount_mad#5]
+Condition : (isnotnull(status#4) AND (status#4 = DELIVERED))
+
+(28) Project
+Output [4]: [order_id#0, restaurant_id#1, city#3, amount_mad#5]
+Input [5]: [order_id#0, restaurant_id#1, city#3, status#4, amount_mad#5]
+
+(29) Sort
+Input [4]: [order_id#0, restaurant_id#1, city#3, amount_mad#5]
+Arguments: [order_id#0 ASC NULLS FIRST], false, 0
+
+(30) SortAggregate
+Input [4]: [order_id#0, restaurant_id#1, city#3, amount_mad#5]
+Keys [1]: [order_id#0]
+Functions [3]: [partial_first(restaurant_id#1, false), partial_first(city#3, false), partial_first(amount_mad#5, false)]
+Aggregate Attributes [6]: [first#1869, valueSet#1870, first#1871, valueSet#1872, first#1873, valueSet#1874]
+Results [7]: [order_id#0, first#1875, valueSet#1876, first#1877, valueSet#1878, first#1879, valueSet#1880]
+
+(31) Exchange
+Input [7]: [order_id#0, first#1875, valueSet#1876, first#1877, valueSet#1878, first#1879, valueSet#1880]
+Arguments: hashpartitioning(order_id#0, 8), ENSURE_REQUIREMENTS, [plan_id=969]
+
+(32) Sort
+Input [7]: [order_id#0, first#1875, valueSet#1876, first#1877, valueSet#1878, first#1879, valueSet#1880]
+Arguments: [order_id#0 ASC NULLS FIRST], false, 0
+
+(33) SortAggregate
+Input [7]: [order_id#0, first#1875, valueSet#1876, first#1877, valueSet#1878, first#1879, valueSet#1880]
+Keys [1]: [order_id#0]
+Functions [3]: [first(restaurant_id#1, false), first(city#3, false), first(amount_mad#5, false)]
+Aggregate Attributes [3]: [first(restaurant_id#1)()#1847, first(city#3)()#1851, first(amount_mad#5)()#1855]
+Results [3]: [first(restaurant_id#1)()#1847 AS restaurant_id#1848, first(city#3)()#1851 AS city#1852, first(amount_mad#5)()#1855 AS amount_mad#1856]
+
+(34) Filter
+Input [3]: [restaurant_id#1848, city#1852, amount_mad#1856]
+Condition : isnotnull(restaurant_id#1848)
+
+(35) Filter
+Input [2]: [restaurant_id#20, category#23]
+Condition : isnotnull(restaurant_id#20)
+
+(36) BroadcastExchange
+Input [2]: [restaurant_id#20, category#23]
+Arguments: HashedRelationBroadcastMode(List(input[0, string, false]),false), [plan_id=974]
+
+(37) BroadcastHashJoin
+Left keys [1]: [restaurant_id#1848]
+Right keys [1]: [restaurant_id#20]
+Join type: Inner
+Join condition: None
+
+(38) Project
+Output [3]: [city#1852, amount_mad#1856, category#23]
+Input [5]: [restaurant_id#1848, city#1852, amount_mad#1856, restaurant_id#20, category#23]
+
+(39) HashAggregate
+Input [3]: [city#1852, amount_mad#1856, category#23]
+Keys [2]: [category#23, city#1852]
+Functions [2]: [partial_sum(amount_mad#1856), partial_count(1)]
+Aggregate Attributes [2]: [sum#1865, count#1866L]
+Results [4]: [category#23, city#1852, sum#1867, count#1868L]
+
+(40) Exchange
+Input [4]: [category#23, city#1852, sum#1867, count#1868L]
+Arguments: hashpartitioning(category#23, city#1852, 8), ENSURE_REQUIREMENTS, [plan_id=979]
+
+(41) HashAggregate
+Input [4]: [category#23, city#1852, sum#1867, count#1868L]
+Keys [2]: [category#23, city#1852]
+Functions [2]: [sum(amount_mad#1856), count(1)]
+Aggregate Attributes [2]: [sum(amount_mad#1856)#1839, count(1)#1841L]
+Results [4]: [category#23, city#1852, round(sum(amount_mad#1856)#1839, 2) AS ca_mad#1840, count(1)#1841L AS commandes#1842L]
+
+(42) Exchange
+Input [4]: [category#23, city#1852, ca_mad#1840, commandes#1842L]
+Arguments: rangepartitioning(ca_mad#1840 DESC NULLS LAST, 8), ENSURE_REQUIREMENTS, [plan_id=982]
+
+(43) Sort
+Input [4]: [category#23, city#1852, ca_mad#1840, commandes#1842L]
+Arguments: [ca_mad#1840 DESC NULLS LAST], true, 0
+
+(44) AdaptiveSparkPlan
+Output [4]: [category#23, city#1852, ca_mad#1840, commandes#1842L]
+Arguments: isFinalPlan=true
+
+
+
+====================================================================================================
+== jointure_sortmerge_formatted
+====================================================================================================
+== Physical Plan ==
+AdaptiveSparkPlan (47)
++- == Final Plan ==
+   * HashAggregate (28)
+   +- AQEShuffleRead (27)
+      +- ShuffleQueryStage (26), Statistics(sizeInBytes=2.8 KiB, rowCount=57)
+         +- Exchange (25)
+            +- * HashAggregate (24)
+               +- * Project (23)
+                  +- * SortMergeJoin Inner (22)
+                     :- * Sort (15)
+                     :  +- AQEShuffleRead (14)
+                     :     +- ShuffleQueryStage (13), Statistics(sizeInBytes=2.3 MiB, rowCount=4.60E+4)
+                     :        +- Exchange (12)
+                     :           +- * Filter (11)
+                     :              +- SortAggregate (10)
+                     :                 +- * Sort (9)
+                     :                    +- AQEShuffleRead (8)
+                     :                       +- ShuffleQueryStage (7), Statistics(sizeInBytes=4.4 MiB, rowCount=4.60E+4)
+                     :                          +- Exchange (6)
+                     :                             +- SortAggregate (5)
+                     :                                +- * Sort (4)
+                     :                                   +- * Project (3)
+                     :                                      +- * Filter (2)
+                     :                                         +- Scan json  (1)
+                     +- * Sort (21)
+                        +- AQEShuffleRead (20)
+                           +- ShuffleQueryStage (19), Statistics(sizeInBytes=7.9 KiB, rowCount=200)
+                              +- Exchange (18)
+                                 +- * Filter (17)
+                                    +- Scan json  (16)
++- == Initial Plan ==
+   HashAggregate (46)
+   +- Exchange (45)
+      +- HashAggregate (44)
+         +- Project (43)
+            +- SortMergeJoin Inner (42)
+               :- Sort (38)
+               :  +- Exchange (37)
+               :     +- Filter (36)
+               :        +- SortAggregate (35)
+               :           +- Sort (34)
+               :              +- Exchange (33)
+               :                 +- SortAggregate (32)
+               :                    +- Sort (31)
+               :                       +- Project (30)
+               :                          +- Filter (29)
+               :                             +- Scan json  (1)
+               +- Sort (41)
+                  +- Exchange (40)
+                     +- Filter (39)
+                        +- Scan json  (16)
+
+
+(1) Scan json 
+Output [5]: [order_id#0, restaurant_id#1, city#3, status#4, amount_mad#5]
+Batched: false
+Location: InMemoryFileIndex [s3a://lake/bronze/history/orders_history.jsonl]
+PushedFilters: [IsNotNull(status), EqualTo(status,DELIVERED)]
+ReadSchema: struct<order_id:string,restaurant_id:string,city:string,status:string,amount_mad:double>
+
+(2) Filter [codegen id : 1]
+Input [5]: [order_id#0, restaurant_id#1, city#3, status#4, amount_mad#5]
+Condition : (isnotnull(status#4) AND (status#4 = DELIVERED))
+
+(3) Project [codegen id : 1]
+Output [4]: [order_id#0, restaurant_id#1, city#3, amount_mad#5]
+Input [5]: [order_id#0, restaurant_id#1, city#3, status#4, amount_mad#5]
+
+(4) Sort [codegen id : 1]
+Input [4]: [order_id#0, restaurant_id#1, city#3, amount_mad#5]
+Arguments: [order_id#0 ASC NULLS FIRST], false, 0
+
+(5) SortAggregate
+Input [4]: [order_id#0, restaurant_id#1, city#3, amount_mad#5]
+Keys [1]: [order_id#0]
+Functions [3]: [partial_first(restaurant_id#1, false), partial_first(city#3, false), partial_first(amount_mad#5, false)]
+Aggregate Attributes [6]: [first#3646, valueSet#3647, first#3648, valueSet#3649, first#3650, valueSet#3651]
+Results [7]: [order_id#0, first#3652, valueSet#3653, first#3654, valueSet#3655, first#3656, valueSet#3657]
+
+(6) Exchange
+Input [7]: [order_id#0, first#3652, valueSet#3653, first#3654, valueSet#3655, first#3656, valueSet#3657]
+Arguments: hashpartitioning(order_id#0, 8), ENSURE_REQUIREMENTS, [plan_id=5835]
+
+(7) ShuffleQueryStage
+Output [7]: [order_id#0, first#3652, valueSet#3653, first#3654, valueSet#3655, first#3656, valueSet#3657]
+Arguments: 0
+
+(8) AQEShuffleRead
+Input [7]: [order_id#0, first#3652, valueSet#3653, first#3654, valueSet#3655, first#3656, valueSet#3657]
+Arguments: coalesced
+
+(9) Sort [codegen id : 3]
+Input [7]: [order_id#0, first#3652, valueSet#3653, first#3654, valueSet#3655, first#3656, valueSet#3657]
+Arguments: [order_id#0 ASC NULLS FIRST], false, 0
+
+(10) SortAggregate
+Input [7]: [order_id#0, first#3652, valueSet#3653, first#3654, valueSet#3655, first#3656, valueSet#3657]
+Keys [1]: [order_id#0]
+Functions [3]: [first(restaurant_id#1, false), first(city#3, false), first(amount_mad#5, false)]
+Aggregate Attributes [3]: [first(restaurant_id#1)()#3626, first(city#3)()#3630, first(amount_mad#5)()#3634]
+Results [3]: [first(restaurant_id#1)()#3626 AS restaurant_id#3627, first(city#3)()#3630 AS city#3631, first(amount_mad#5)()#3634 AS amount_mad#3635]
+
+(11) Filter [codegen id : 4]
+Input [3]: [restaurant_id#3627, city#3631, amount_mad#3635]
+Condition : isnotnull(restaurant_id#3627)
+
+(12) Exchange
+Input [3]: [restaurant_id#3627, city#3631, amount_mad#3635]
+Arguments: hashpartitioning(restaurant_id#3627, 8), ENSURE_REQUIREMENTS, [plan_id=5930]
+
+(13) ShuffleQueryStage
+Output [3]: [restaurant_id#3627, city#3631, amount_mad#3635]
+Arguments: 2
+
+(14) AQEShuffleRead
+Input [3]: [restaurant_id#3627, city#3631, amount_mad#3635]
+Arguments: coalesced
+
+(15) Sort [codegen id : 5]
+Input [3]: [restaurant_id#3627, city#3631, amount_mad#3635]
+Arguments: [restaurant_id#3627 ASC NULLS FIRST], false, 0
+
+(16) Scan json 
+Output [2]: [restaurant_id#20, category#23]
+Batched: false
+Location: InMemoryFileIndex [file:/workspace/data/restaurants.json]
+PushedFilters: [IsNotNull(restaurant_id)]
+ReadSchema: struct<restaurant_id:string,category:string>
+
+(17) Filter [codegen id : 2]
+Input [2]: [restaurant_id#20, category#23]
+Condition : isnotnull(restaurant_id#20)
+
+(18) Exchange
+Input [2]: [restaurant_id#20, category#23]
+Arguments: hashpartitioning(restaurant_id#20, 8), ENSURE_REQUIREMENTS, [plan_id=5857]
+
+(19) ShuffleQueryStage
+Output [2]: [restaurant_id#20, category#23]
+Arguments: 1
+
+(20) AQEShuffleRead
+Input [2]: [restaurant_id#20, category#23]
+Arguments: coalesced
+
+(21) Sort [codegen id : 6]
+Input [2]: [restaurant_id#20, category#23]
+Arguments: [restaurant_id#20 ASC NULLS FIRST], false, 0
+
+(22) SortMergeJoin [codegen id : 7]
+Left keys [1]: [restaurant_id#3627]
+Right keys [1]: [restaurant_id#20]
+Join type: Inner
+Join condition: None
+
+(23) Project [codegen id : 7]
+Output [3]: [city#3631, amount_mad#3635, category#23]
+Input [5]: [restaurant_id#3627, city#3631, amount_mad#3635, restaurant_id#20, category#23]
+
+(24) HashAggregate [codegen id : 7]
+Input [3]: [city#3631, amount_mad#3635, category#23]
+Keys [2]: [category#23, city#3631]
+Functions [1]: [partial_sum(amount_mad#3635)]
+Aggregate Attributes [1]: [sum#3644]
+Results [3]: [category#23, city#3631, sum#3645]
+
+(25) Exchange
+Input [3]: [category#23, city#3631, sum#3645]
+Arguments: hashpartitioning(category#23, city#3631, 8), ENSURE_REQUIREMENTS, [plan_id=6027]
+
+(26) ShuffleQueryStage
+Output [3]: [category#23, city#3631, sum#3645]
+Arguments: 3
+
+(27) AQEShuffleRead
+Input [3]: [category#23, city#3631, sum#3645]
+Arguments: coalesced
+
+(28) HashAggregate [codegen id : 8]
+Input [3]: [category#23, city#3631, sum#3645]
+Keys [2]: [category#23, city#3631]
+Functions [1]: [sum(amount_mad#3635)]
+Aggregate Attributes [1]: [sum(amount_mad#3635)#3621]
+Results [3]: [category#23, city#3631, sum(amount_mad#3635)#3621 AS ca_mad#3622]
+
+(29) Filter
+Input [5]: [order_id#0, restaurant_id#1, city#3, status#4, amount_mad#5]
+Condition : (isnotnull(status#4) AND (status#4 = DELIVERED))
+
+(30) Project
+Output [4]: [order_id#0, restaurant_id#1, city#3, amount_mad#5]
+Input [5]: [order_id#0, restaurant_id#1, city#3, status#4, amount_mad#5]
+
+(31) Sort
+Input [4]: [order_id#0, restaurant_id#1, city#3, amount_mad#5]
+Arguments: [order_id#0 ASC NULLS FIRST], false, 0
+
+(32) SortAggregate
+Input [4]: [order_id#0, restaurant_id#1, city#3, amount_mad#5]
+Keys [1]: [order_id#0]
+Functions [3]: [partial_first(restaurant_id#1, false), partial_first(city#3, false), partial_first(amount_mad#5, false)]
+Aggregate Attributes [6]: [first#3646, valueSet#3647, first#3648, valueSet#3649, first#3650, valueSet#3651]
+Results [7]: [order_id#0, first#3652, valueSet#3653, first#3654, valueSet#3655, first#3656, valueSet#3657]
+
+(33) Exchange
+Input [7]: [order_id#0, first#3652, valueSet#3653, first#3654, valueSet#3655, first#3656, valueSet#3657]
+Arguments: hashpartitioning(order_id#0, 8), ENSURE_REQUIREMENTS, [plan_id=5777]
+
+(34) Sort
+Input [7]: [order_id#0, first#3652, valueSet#3653, first#3654, valueSet#3655, first#3656, valueSet#3657]
+Arguments: [order_id#0 ASC NULLS FIRST], false, 0
+
+(35) SortAggregate
+Input [7]: [order_id#0, first#3652, valueSet#3653, first#3654, valueSet#3655, first#3656, valueSet#3657]
+Keys [1]: [order_id#0]
+Functions [3]: [first(restaurant_id#1, false), first(city#3, false), first(amount_mad#5, false)]
+Aggregate Attributes [3]: [first(restaurant_id#1)()#3626, first(city#3)()#3630, first(amount_mad#5)()#3634]
+Results [3]: [first(restaurant_id#1)()#3626 AS restaurant_id#3627, first(city#3)()#3630 AS city#3631, first(amount_mad#5)()#3634 AS amount_mad#3635]
+
+(36) Filter
+Input [3]: [restaurant_id#3627, city#3631, amount_mad#3635]
+Condition : isnotnull(restaurant_id#3627)
+
+(37) Exchange
+Input [3]: [restaurant_id#3627, city#3631, amount_mad#3635]
+Arguments: hashpartitioning(restaurant_id#3627, 8), ENSURE_REQUIREMENTS, [plan_id=5783]
+
+(38) Sort
+Input [3]: [restaurant_id#3627, city#3631, amount_mad#3635]
+Arguments: [restaurant_id#3627 ASC NULLS FIRST], false, 0
+
+(39) Filter
+Input [2]: [restaurant_id#20, category#23]
+Condition : isnotnull(restaurant_id#20)
+
+(40) Exchange
+Input [2]: [restaurant_id#20, category#23]
+Arguments: hashpartitioning(restaurant_id#20, 8), ENSURE_REQUIREMENTS, [plan_id=5784]
+
+(41) Sort
+Input [2]: [restaurant_id#20, category#23]
+Arguments: [restaurant_id#20 ASC NULLS FIRST], false, 0
+
+(42) SortMergeJoin
+Left keys [1]: [restaurant_id#3627]
+Right keys [1]: [restaurant_id#20]
+Join type: Inner
+Join condition: None
+
+(43) Project
+Output [3]: [city#3631, amount_mad#3635, category#23]
+Input [5]: [restaurant_id#3627, city#3631, amount_mad#3635, restaurant_id#20, category#23]
+
+(44) HashAggregate
+Input [3]: [city#3631, amount_mad#3635, category#23]
+Keys [2]: [category#23, city#3631]
+Functions [1]: [partial_sum(amount_mad#3635)]
+Aggregate Attributes [1]: [sum#3644]
+Results [3]: [category#23, city#3631, sum#3645]
+
+(45) Exchange
+Input [3]: [category#23, city#3631, sum#3645]
+Arguments: hashpartitioning(category#23, city#3631, 8), ENSURE_REQUIREMENTS, [plan_id=5791]
+
+(46) HashAggregate
+Input [3]: [category#23, city#3631, sum#3645]
+Keys [2]: [category#23, city#3631]
+Functions [1]: [sum(amount_mad#3635)]
+Aggregate Attributes [1]: [sum(amount_mad#3635)#3621]
+Results [3]: [category#23, city#3631, sum(amount_mad#3635)#3621 AS ca_mad#3622]
+
+(47) AdaptiveSparkPlan
+Output [3]: [category#23, city#3631, ca_mad#3622]
+Arguments: isFinalPlan=true
+
+
+
+====================================================================================================
+== distance_band_UDF Python
+====================================================================================================
+== Physical Plan ==
+AdaptiveSparkPlan (9)
++- HashAggregate (8)
+   +- Exchange (7)
+      +- HashAggregate (6)
+         +- Project (5)
+            +- BatchEvalPython (4)
+               +- InMemoryTableScan (1)
+                     +- InMemoryRelation (2)
+                           +- Scan json  (3)
+
+
+(1) InMemoryTableScan
+Output [1]: [distance_km#7]
+Arguments: [distance_km#7]
+
+(2) InMemoryRelation
+Arguments: [order_id#0, restaurant_id#1, customer_id#2, city#3, status#4, amount_mad#5, items_count#6, distance_km#7, courier_id#8, event_time#9], CachedRDDBuilder(org.apache.spark.sql.execution.columnar.DefaultCachedBatchSerializer@4eeb2d56,StorageLevel(disk, memory, deserialized, 1 replicas),FileScan json [order_id#0,restaurant_id#1,customer_id#2,city#3,status#4,amount_mad#5,items_count#6,distance_km#7,courier_id#8,event_time#9] Batched: false, DataFilters: [], Format: JSON, Location: InMemoryFileIndex(1 paths)[s3a://lake/bronze/history/orders_history.jsonl], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<order_id:string,restaurant_id:string,customer_id:string,city:string,status:string,amount_m...
+,None)
+
+(3) Scan json 
+Output [10]: [order_id#0, restaurant_id#1, customer_id#2, city#3, status#4, amount_mad#5, items_count#6, distance_km#7, courier_id#8, event_time#9]
+Batched: false
+Location: InMemoryFileIndex [s3a://lake/bronze/history/orders_history.jsonl]
+ReadSchema: struct<order_id:string,restaurant_id:string,customer_id:string,city:string,status:string,amount_mad:double,items_count:int,distance_km:double,courier_id:string,event_time:timestamp>
+
+(4) BatchEvalPython
+Input [1]: [distance_km#7]
+Arguments: [distance_band_udf(distance_km#7)#9222], [pythonUDF0#9350]
+
+(5) Project
+Output [1]: [pythonUDF0#9350 AS distance_band#9223]
+Input [2]: [distance_km#7, pythonUDF0#9350]
+
+(6) HashAggregate
+Input [1]: [distance_band#9223]
+Keys [1]: [distance_band#9223]
+Functions [1]: [partial_count(1)]
+Aggregate Attributes [1]: [count#9401L]
+Results [2]: [distance_band#9223, count#9402L]
+
+(7) Exchange
+Input [2]: [distance_band#9223, count#9402L]
+Arguments: hashpartitioning(distance_band#9223, 8), ENSURE_REQUIREMENTS, [plan_id=7901]
+
+(8) HashAggregate
+Input [2]: [distance_band#9223, count#9402L]
+Keys [1]: [distance_band#9223]
+Functions [1]: [count(1)]
+Aggregate Attributes [1]: [count(1)#9246L]
+Results [2]: [distance_band#9223, count(1)#9246L AS count#9247L]
+
+(9) AdaptiveSparkPlan
+Output [2]: [distance_band#9223, count#9247L]
+Arguments: isFinalPlan=false
+
+
+
+====================================================================================================
+== distance_band_UDF pandas (Arrow)
+====================================================================================================
+== Physical Plan ==
+AdaptiveSparkPlan (9)
++- HashAggregate (8)
+   +- Exchange (7)
+      +- HashAggregate (6)
+         +- Project (5)
+            +- ArrowEvalPython (4)
+               +- InMemoryTableScan (1)
+                     +- InMemoryRelation (2)
+                           +- Scan json  (3)
+
+
+(1) InMemoryTableScan
+Output [1]: [distance_km#7]
+Arguments: [distance_km#7]
+
+(2) InMemoryRelation
+Arguments: [order_id#0, restaurant_id#1, customer_id#2, city#3, status#4, amount_mad#5, items_count#6, distance_km#7, courier_id#8, event_time#9], CachedRDDBuilder(org.apache.spark.sql.execution.columnar.DefaultCachedBatchSerializer@4eeb2d56,StorageLevel(disk, memory, deserialized, 1 replicas),FileScan json [order_id#0,restaurant_id#1,customer_id#2,city#3,status#4,amount_mad#5,items_count#6,distance_km#7,courier_id#8,event_time#9] Batched: false, DataFilters: [], Format: JSON, Location: InMemoryFileIndex(1 paths)[s3a://lake/bronze/history/orders_history.jsonl], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<order_id:string,restaurant_id:string,customer_id:string,city:string,status:string,amount_m...
+,None)
+
+(3) Scan json 
+Output [10]: [order_id#0, restaurant_id#1, customer_id#2, city#3, status#4, amount_mad#5, items_count#6, distance_km#7, courier_id#8, event_time#9]
+Batched: false
+Location: InMemoryFileIndex [s3a://lake/bronze/history/orders_history.jsonl]
+ReadSchema: struct<order_id:string,restaurant_id:string,customer_id:string,city:string,status:string,amount_mad:double,items_count:int,distance_km:double,courier_id:string,event_time:timestamp>
+
+(4) ArrowEvalPython
+Input [1]: [distance_km#7]
+Arguments: [distance_band_pandas(distance_km#7)#9403], [pythonUDF0#9531], 200
+
+(5) Project
+Output [1]: [pythonUDF0#9531 AS distance_band#9404]
+Input [2]: [distance_km#7, pythonUDF0#9531]
+
+(6) HashAggregate
+Input [1]: [distance_band#9404]
+Keys [1]: [distance_band#9404]
+Functions [1]: [partial_count(1)]
+Aggregate Attributes [1]: [count#9582L]
+Results [2]: [distance_band#9404, count#9583L]
+
+(7) Exchange
+Input [2]: [distance_band#9404, count#9583L]
+Arguments: hashpartitioning(distance_band#9404, 8), ENSURE_REQUIREMENTS, [plan_id=7922]
+
+(8) HashAggregate
+Input [2]: [distance_band#9404, count#9583L]
+Keys [1]: [distance_band#9404]
+Functions [1]: [count(1)]
+Aggregate Attributes [1]: [count(1)#9427L]
+Results [2]: [distance_band#9404, count(1)#9427L AS count#9428L]
+
+(9) AdaptiveSparkPlan
+Output [2]: [distance_band#9404, count#9428L]
+Arguments: isFinalPlan=false
+
+
+
+====================================================================================================
+== distance_band_when/otherwise (natif)
+====================================================================================================
+== Physical Plan ==
+AdaptiveSparkPlan (8)
++- HashAggregate (7)
+   +- Exchange (6)
+      +- HashAggregate (5)
+         +- Project (4)
+            +- InMemoryTableScan (1)
+                  +- InMemoryRelation (2)
+                        +- Scan json  (3)
+
+
+(1) InMemoryTableScan
+Output [1]: [distance_km#7]
+Arguments: [distance_km#7]
+
+(2) InMemoryRelation
+Arguments: [order_id#0, restaurant_id#1, customer_id#2, city#3, status#4, amount_mad#5, items_count#6, distance_km#7, courier_id#8, event_time#9], CachedRDDBuilder(org.apache.spark.sql.execution.columnar.DefaultCachedBatchSerializer@4eeb2d56,StorageLevel(disk, memory, deserialized, 1 replicas),FileScan json [order_id#0,restaurant_id#1,customer_id#2,city#3,status#4,amount_mad#5,items_count#6,distance_km#7,courier_id#8,event_time#9] Batched: false, DataFilters: [], Format: JSON, Location: InMemoryFileIndex(1 paths)[s3a://lake/bronze/history/orders_history.jsonl], PartitionFilters: [], PushedFilters: [], ReadSchema: struct<order_id:string,restaurant_id:string,customer_id:string,city:string,status:string,amount_m...
+,None)
+
+(3) Scan json 
+Output [10]: [order_id#0, restaurant_id#1, customer_id#2, city#3, status#4, amount_mad#5, items_count#6, distance_km#7, courier_id#8, event_time#9]
+Batched: false
+Location: InMemoryFileIndex [s3a://lake/bronze/history/orders_history.jsonl]
+ReadSchema: struct<order_id:string,restaurant_id:string,customer_id:string,city:string,status:string,amount_mad:double,items_count:int,distance_km:double,courier_id:string,event_time:timestamp>
+
+(4) Project
+Output [1]: [CASE WHEN (distance_km#7 < 2.0) THEN court WHEN (distance_km#7 <= 5.0) THEN moyen WHEN (distance_km#7 > 5.0) THEN long END AS distance_band#9584]
+Input [1]: [distance_km#7]
+
+(5) HashAggregate
+Input [1]: [distance_band#9584]
+Keys [1]: [distance_band#9584]
+Functions [1]: [partial_count(1)]
+Aggregate Attributes [1]: [count#9761L]
+Results [2]: [distance_band#9584, count#9762L]
+
+(6) Exchange
+Input [2]: [distance_band#9584, count#9762L]
+Arguments: hashpartitioning(distance_band#9584, 8), ENSURE_REQUIREMENTS, [plan_id=7937]
+
+(7) HashAggregate
+Input [2]: [distance_band#9584, count#9762L]
+Keys [1]: [distance_band#9584]
+Functions [1]: [count(1)]
+Aggregate Attributes [1]: [count(1)#9607L]
+Results [2]: [distance_band#9584, count(1)#9607L AS count#9608L]
+
+(8) AdaptiveSparkPlan
+Output [2]: [distance_band#9584, count#9608L]
+Arguments: isFinalPlan=false
+
+
+
+====================================================================================================
+== silver_partition_pruning
+====================================================================================================
+== Physical Plan ==
+* ColumnarToRow (2)
++- Scan parquet  (1)
+
+
+(1) Scan parquet 
+Output [14]: [restaurant_id#10140, order_id#10141, customer_id#10142, status#10143, amount_mad#10144, items_count#10145, distance_km#10146, courier_id#10147, event_time#10148, restaurant_name#10149, category#10150, event_date#10151, distance_band#10152, city#10153]
+Batched: true
+Location: InMemoryFileIndex [s3a://lake/silver/orders_history]
+PartitionFilters: [isnotnull(city#10153), (city#10153 = Casablanca)]
+ReadSchema: struct<restaurant_id:string,order_id:string,customer_id:string,status:string,amount_mad:double,items_count:int,distance_km:double,courier_id:string,event_time:timestamp,restaurant_name:string,category:string,event_date:date,distance_band:string>
+
+(2) ColumnarToRow [codegen id : 1]
+Input [14]: [restaurant_id#10140, order_id#10141, customer_id#10142, status#10143, amount_mad#10144, items_count#10145, distance_km#10146, courier_id#10147, event_time#10148, restaurant_name#10149, category#10150, event_date#10151, distance_band#10152, city#10153]
+
+
+
+====================================================================================================
+== rdd_lineage
+====================================================================================================
+(8) PythonRDD[1219] at RDD at PythonRDD.scala:53 []
+ |  MapPartitionsRDD[1218] at mapPartitions at PythonRDD.scala:160 []
+ |  ShuffledRDD[1217] at partitionBy at <unknown>:0 []
+ +-(8) PairwiseRDD[1216] at reduceByKey at /tmp/ipykernel_3165/2621212028.py:4 []
+    |  PythonRDD[1215] at reduceByKey at /tmp/ipykernel_3165/2621212028.py:4 []
+    |  MapPartitionsRDD[1214] at mapPartitions at PythonRDD.scala:160 []
+    |  ShuffledRDD[1213] at partitionBy at <unknown>:0 []
+    +-(8) PairwiseRDD[1212] at reduceByKey at /tmp/ipykernel_3165/2621212028.py:4 []
+       |  PythonRDD[1211] at reduceByKey at /tmp/ipykernel_3165/2621212028.py:4 []
+       |  s3a://lake/bronze/history/orders_history.jsonl MapPartitionsRDD[1210] at textFile at NativeMethodAccessorImpl.java:0 []
+       |  s3a://lake/bronze/history/orders_history.jsonl HadoopRDD[1209] at textFile at NativeMethodAccessorImpl.java:0 []
+
+====================================================================================================
+== dataframe_formatted
+====================================================================================================
+== Physical Plan ==
+AdaptiveSparkPlan (26)
++- == Final Plan ==
+   * HashAggregate (15)
+   +- AQEShuffleRead (14)
+      +- ShuffleQueryStage (13), Statistics(sizeInBytes=272.0 B, rowCount=8)
+         +- Exchange (12)
+            +- * HashAggregate (11)
+               +- SortAggregate (10)
+                  +- * Sort (9)
+                     +- AQEShuffleRead (8)
+                        +- ShuffleQueryStage (7), Statistics(sizeInBytes=3.3 MiB, rowCount=4.60E+4)
+                           +- Exchange (6)
+                              +- SortAggregate (5)
+                                 +- * Sort (4)
+                                    +- * Project (3)
+                                       +- * Filter (2)
+                                          +- Scan json  (1)
++- == Initial Plan ==
+   HashAggregate (25)
+   +- Exchange (24)
+      +- HashAggregate (23)
+         +- SortAggregate (22)
+            +- Sort (21)
+               +- Exchange (20)
+                  +- SortAggregate (19)
+                     +- Sort (18)
+                        +- Project (17)
+                           +- Filter (16)
+                              +- Scan json  (1)
+
+
+(1) Scan json 
+Output [4]: [order_id#14033, city#14036, status#14037, amount_mad#14038]
+Batched: false
+Location: InMemoryFileIndex [s3a://lake/bronze/history/orders_history.jsonl]
+PushedFilters: [IsNotNull(status), EqualTo(status,DELIVERED)]
+ReadSchema: struct<order_id:string,city:string,status:string,amount_mad:double>
+
+(2) Filter [codegen id : 1]
+Input [4]: [order_id#14033, city#14036, status#14037, amount_mad#14038]
+Condition : (isnotnull(status#14037) AND (status#14037 = DELIVERED))
+
+(3) Project [codegen id : 1]
+Output [3]: [order_id#14033, city#14036, amount_mad#14038]
+Input [4]: [order_id#14033, city#14036, status#14037, amount_mad#14038]
+
+(4) Sort [codegen id : 1]
+Input [3]: [order_id#14033, city#14036, amount_mad#14038]
+Arguments: [order_id#14033 ASC NULLS FIRST], false, 0
+
+(5) SortAggregate
+Input [3]: [order_id#14033, city#14036, amount_mad#14038]
+Keys [1]: [order_id#14033]
+Functions [2]: [partial_first(city#14036, false), partial_first(amount_mad#14038, false)]
+Aggregate Attributes [4]: [first#14088, valueSet#14089, first#14090, valueSet#14091]
+Results [5]: [order_id#14033, first#14092, valueSet#14093, first#14094, valueSet#14095]
+
+(6) Exchange
+Input [5]: [order_id#14033, first#14092, valueSet#14093, first#14094, valueSet#14095]
+Arguments: hashpartitioning(order_id#14033, 8), ENSURE_REQUIREMENTS, [plan_id=11433]
+
+(7) ShuffleQueryStage
+Output [5]: [order_id#14033, first#14092, valueSet#14093, first#14094, valueSet#14095]
+Arguments: 0
+
+(8) AQEShuffleRead
+Input [5]: [order_id#14033, first#14092, valueSet#14093, first#14094, valueSet#14095]
+Arguments: coalesced
+
+(9) Sort [codegen id : 2]
+Input [5]: [order_id#14033, first#14092, valueSet#14093, first#14094, valueSet#14095]
+Arguments: [order_id#14033 ASC NULLS FIRST], false, 0
+
+(10) SortAggregate
+Input [5]: [order_id#14033, first#14092, valueSet#14093, first#14094, valueSet#14095]
+Keys [1]: [order_id#14033]
+Functions [2]: [first(city#14036, false), first(amount_mad#14038, false)]
+Aggregate Attributes [2]: [first(city#14036)()#14072, first(amount_mad#14038)()#14076]
+Results [2]: [first(city#14036)()#14072 AS city#14073, first(amount_mad#14038)()#14076 AS amount_mad#14077]
+
+(11) HashAggregate [codegen id : 3]
+Input [2]: [city#14073, amount_mad#14077]
+Keys [1]: [city#14073]
+Functions [1]: [partial_sum(amount_mad#14077)]
+Aggregate Attributes [1]: [sum#14086]
+Results [2]: [city#14073, sum#14087]
+
+(12) Exchange
+Input [2]: [city#14073, sum#14087]
+Arguments: hashpartitioning(city#14073, 8), ENSURE_REQUIREMENTS, [plan_id=11480]
+
+(13) ShuffleQueryStage
+Output [2]: [city#14073, sum#14087]
+Arguments: 1
+
+(14) AQEShuffleRead
+Input [2]: [city#14073, sum#14087]
+Arguments: coalesced
+
+(15) HashAggregate [codegen id : 4]
+Input [2]: [city#14073, sum#14087]
+Keys [1]: [city#14073]
+Functions [1]: [sum(amount_mad#14077)]
+Aggregate Attributes [1]: [sum(amount_mad#14077)#14064]
+Results [2]: [city#14073, sum(amount_mad#14077)#14064 AS ca_mad#14065]
+
+(16) Filter
+Input [4]: [order_id#14033, city#14036, status#14037, amount_mad#14038]
+Condition : (isnotnull(status#14037) AND (status#14037 = DELIVERED))
+
+(17) Project
+Output [3]: [order_id#14033, city#14036, amount_mad#14038]
+Input [4]: [order_id#14033, city#14036, status#14037, amount_mad#14038]
+
+(18) Sort
+Input [3]: [order_id#14033, city#14036, amount_mad#14038]
+Arguments: [order_id#14033 ASC NULLS FIRST], false, 0
+
+(19) SortAggregate
+Input [3]: [order_id#14033, city#14036, amount_mad#14038]
+Keys [1]: [order_id#14033]
+Functions [2]: [partial_first(city#14036, false), partial_first(amount_mad#14038, false)]
+Aggregate Attributes [4]: [first#14088, valueSet#14089, first#14090, valueSet#14091]
+Results [5]: [order_id#14033, first#14092, valueSet#14093, first#14094, valueSet#14095]
+
+(20) Exchange
+Input [5]: [order_id#14033, first#14092, valueSet#14093, first#14094, valueSet#14095]
+Arguments: hashpartitioning(order_id#14033, 8), ENSURE_REQUIREMENTS, [plan_id=11401]
+
+(21) Sort
+Input [5]: [order_id#14033, first#14092, valueSet#14093, first#14094, valueSet#14095]
+Arguments: [order_id#14033 ASC NULLS FIRST], false, 0
+
+(22) SortAggregate
+Input [5]: [order_id#14033, first#14092, valueSet#14093, first#14094, valueSet#14095]
+Keys [1]: [order_id#14033]
+Functions [2]: [first(city#14036, false), first(amount_mad#14038, false)]
+Aggregate Attributes [2]: [first(city#14036)()#14072, first(amount_mad#14038)()#14076]
+Results [2]: [first(city#14036)()#14072 AS city#14073, first(amount_mad#14038)()#14076 AS amount_mad#14077]
+
+(23) HashAggregate
+Input [2]: [city#14073, amount_mad#14077]
+Keys [1]: [city#14073]
+Functions [1]: [partial_sum(amount_mad#14077)]
+Aggregate Attributes [1]: [sum#14086]
+Results [2]: [city#14073, sum#14087]
+
+(24) Exchange
+Input [2]: [city#14073, sum#14087]
+Arguments: hashpartitioning(city#14073, 8), ENSURE_REQUIREMENTS, [plan_id=11406]
+
+(25) HashAggregate
+Input [2]: [city#14073, sum#14087]
+Keys [1]: [city#14073]
+Functions [1]: [sum(amount_mad#14077)]
+Aggregate Attributes [1]: [sum(amount_mad#14077)#14064]
+Results [2]: [city#14073, sum(amount_mad#14077)#14064 AS ca_mad#14065]
+
+(26) AdaptiveSparkPlan
+Output [2]: [city#14073, ca_mad#14065]
+Arguments: isFinalPlan=true
+
+
+
+====================================================================================================
+== dataframe_extended
+====================================================================================================
+== Parsed Logical Plan ==
+'Aggregate ['city], ['city, sum('amount_mad) AS ca_mad#14065]
++- Deduplicate [order_id#14033]
+   +- Filter (status#14037 = DELIVERED)
+      +- Relation [order_id#14033,restaurant_id#14034,customer_id#14035,city#14036,status#14037,amount_mad#14038,items_count#14039,distance_km#14040,courier_id#14041,event_time#14042] json
+
+== Analyzed Logical Plan ==
+city: string, ca_mad: double
+Aggregate [city#14036], [city#14036, sum(amount_mad#14038) AS ca_mad#14065]
++- Deduplicate [order_id#14033]
+   +- Filter (status#14037 = DELIVERED)
+      +- Relation [order_id#14033,restaurant_id#14034,customer_id#14035,city#14036,status#14037,amount_mad#14038,items_count#14039,distance_km#14040,courier_id#14041,event_time#14042] json
+
+== Optimized Logical Plan ==
+Aggregate [city#14073], [city#14073, sum(amount_mad#14077) AS ca_mad#14065]
++- Aggregate [order_id#14033], [first(city#14036, false) AS city#14073, first(amount_mad#14038, false) AS amount_mad#14077]
+   +- Project [order_id#14033, city#14036, amount_mad#14038]
+      +- Filter (isnotnull(status#14037) AND (status#14037 = DELIVERED))
+         +- Relation [order_id#14033,restaurant_id#14034,customer_id#14035,city#14036,status#14037,amount_mad#14038,items_count#14039,distance_km#14040,courier_id#14041,event_time#14042] json
+
+== Physical Plan ==
+AdaptiveSparkPlan isFinalPlan=true
++- == Final Plan ==
+   *(4) HashAggregate(keys=[city#14073], functions=[sum(amount_mad#14077)], output=[city#14073, ca_mad#14065])
+   +- AQEShuffleRead coalesced
+      +- ShuffleQueryStage 1
+         +- Exchange hashpartitioning(city#14073, 8), ENSURE_REQUIREMENTS, [plan_id=11480]
+            +- *(3) HashAggregate(keys=[city#14073], functions=[partial_sum(amount_mad#14077)], output=[city#14073, sum#14087])
+               +- SortAggregate(key=[order_id#14033], functions=[first(city#14036, false), first(amount_mad#14038, false)], output=[city#14073, amount_mad#14077])
+                  +- *(2) Sort [order_id#14033 ASC NULLS FIRST], false, 0
+                     +- AQEShuffleRead coalesced
+                        +- ShuffleQueryStage 0
+                           +- Exchange hashpartitioning(order_id#14033, 8), ENSURE_REQUIREMENTS, [plan_id=11433]
+                              +- SortAggregate(key=[order_id#14033], functions=[partial_first(city#14036, false), partial_first(amount_mad#14038, false)], output=[order_id#14033, first#14092, valueSet#14093, first#14094, valueSet#14095])
+                                 +- *(1) Sort [order_id#14033 ASC NULLS FIRST], false, 0
+                                    +- *(1) Project [order_id#14033, city#14036, amount_mad#14038]
+                                       +- *(1) Filter (isnotnull(status#14037) AND (status#14037 = DELIVERED))
+                                          +- FileScan json [order_id#14033,city#14036,status#14037,amount_mad#14038] Batched: false, DataFilters: [isnotnull(status#14037), (status#14037 = DELIVERED)], Format: JSON, Location: InMemoryFileIndex(1 paths)[s3a://lake/bronze/history/orders_history.jsonl], PartitionFilters: [], PushedFilters: [IsNotNull(status), EqualTo(status,DELIVERED)], ReadSchema: struct<order_id:string,city:string,status:string,amount_mad:double>
++- == Initial Plan ==
+   HashAggregate(keys=[city#14073], functions=[sum(amount_mad#14077)], output=[city#14073, ca_mad#14065])
+   +- Exchange hashpartitioning(city#14073, 8), ENSURE_REQUIREMENTS, [plan_id=11406]
+      +- HashAggregate(keys=[city#14073], functions=[partial_sum(amount_mad#14077)], output=[city#14073, sum#14087])
+         +- SortAggregate(key=[order_id#14033], functions=[first(city#14036, false), first(amount_mad#14038, false)], output=[city#14073, amount_mad#14077])
+            +- Sort [order_id#14033 ASC NULLS FIRST], false, 0
+               +- Exchange hashpartitioning(order_id#14033, 8), ENSURE_REQUIREMENTS, [plan_id=11401]
+                  +- SortAggregate(key=[order_id#14033], functions=[partial_first(city#14036, false), partial_first(amount_mad#14038, false)], output=[order_id#14033, first#14092, valueSet#14093, first#14094, valueSet#14095])
+                     +- Sort [order_id#14033 ASC NULLS FIRST], false, 0
+                        +- Project [order_id#14033, city#14036, amount_mad#14038]
+                           +- Filter (isnotnull(status#14037) AND (status#14037 = DELIVERED))
+                              +- FileScan json [order_id#14033,city#14036,status#14037,amount_mad#14038] Batched: false, DataFilters: [isnotnull(status#14037), (status#14037 = DELIVERED)], Format: JSON, Location: InMemoryFileIndex(1 paths)[s3a://lake/bronze/history/orders_history.jsonl], PartitionFilters: [], PushedFilters: [IsNotNull(status), EqualTo(status,DELIVERED)], ReadSchema: struct<order_id:string,city:string,status:string,amount_mad:double>
+

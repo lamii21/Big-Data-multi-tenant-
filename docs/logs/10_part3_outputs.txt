@@ -1,0 +1,473 @@
+----- [cellule p3-01]
+app_id                                   app-20261114181835-0005
+spark_version                            3.5.9
+master                                   spark://spark-master:7077
+default_parallelism                      8
+executors                                ['0', '1', '2', '3']
+spark.sql.shuffle.partitions             8
+spark.sql.adaptive.enabled               true
+spark.sql.autoBroadcastJoinThreshold     10485760b
+----- [cellule p3-03]
+root
+ |-- order_id: string (nullable = true)
+ |-- restaurant_id: string (nullable = true)
+ |-- customer_id: string (nullable = true)
+ |-- city: string (nullable = true)
+ |-- status: string (nullable = true)
+ |-- amount_mad: double (nullable = true)
+ |-- items_count: integer (nullable = true)
+ |-- distance_km: double (nullable = true)
+ |-- courier_id: string (nullable = true)
+ |-- event_time: timestamp (nullable = true)
+
+NB : les sources fichier (JSON, Parquet) exposent toujours nullable=true ; la non-nullité est donc vérifiée ci-dessous par comptage.
+Lignes lues            : 150281  (Partie 2 : 150281)
+Lignes non conformes   : 0
+Valeurs nulles         : {'order_id': 0, 'restaurant_id': 0, 'customer_id': 0, 'city': 0, 'status': 0, 'amount_mad': 0, 'items_count': 0, 'distance_km': 0, 'courier_id': 0, 'event_time': 0}
+Statuts inconnus       : 0
+Restaurants            : 200
+Partitions de lecture  : 8  (RDD Partie 2 : 8)
+----- [cellule p3-05]
+explicite  : durées [0.033, 0.032, 0.058] s | jobs lancés à la lecture : [0, 0, 0]
+inference  : durées [1.588, 0.532, 0.508] s | jobs lancés à la lecture : [1, 1, 1]
+
+Schéma inféré :
+root
+ |-- amount_mad: double (nullable = true)
+ |-- city: string (nullable = true)
+ |-- courier_id: string (nullable = true)
+ |-- customer_id: string (nullable = true)
+ |-- distance_km: double (nullable = true)
+ |-- event_time: string (nullable = true)
+ |-- items_count: long (nullable = true)
+ |-- order_id: string (nullable = true)
+ |-- restaurant_id: string (nullable = true)
+ |-- status: string (nullable = true)
+
+📏 Différences de type (explicite -> inféré) : {'items_count': 'int -> bigint', 'event_time': 'timestamp -> string'}
+📏 Ordre des colonnes inféré : ['amount_mad', 'city', 'courier_id', 'customer_id', 'distance_km', 'event_time', 'items_count', 'order_id', 'restaurant_id', 'status']
+----- [cellule p3-07]
+DELIVERED (brut)      : 46977   (Partie 2 : 46977)
+DELIVERED (uniques)   : 46028   (Partie 2 : 46028)
+Doublons écartés      : 949   (Partie 2 : 949)
+----- [cellule p3-09]
++----------+------------+------+---------+----------------+
+|city      |ca_mad      |part_%|commandes|panier_moyen_mad|
++----------+------------+------+---------+----------------+
+|Casablanca|2,441,036.72|27.7  |12592    |193.86          |
+|Marrakech |1,252,086.80|14.2  |6399     |195.67          |
+|Agadir    |1,066,986.41|12.1  |5407     |197.33          |
+|Rabat     |1,003,432.78|11.4  |5498     |182.51          |
+|Tanger    |953,252.19  |10.8  |4893     |194.82          |
+|Fes       |872,019.55  |9.9   |4599     |189.61          |
+|Oujda     |833,093.75  |9.5   |4594     |181.34          |
+|Meknes    |377,737.33  |4.3   |2046     |184.62          |
++----------+------------+------+---------+----------------+
+
+CA total : 8,799,645.53 MAD (Partie 2 : 8,799,645.53)
+----- [cellule p3-10]
+DataFrame == SQL                      : True
+CA identique à la Partie 2 (RDD)      : True
+Panier moyen identique à la Partie 2  : True
+----- [cellule p3-12]
+57 couples (catégorie, ville) — 46028 commandes conservées par la jointure
+
++--------+----------+---------+---------+
+|category|city      |ca_mad   |commandes|
++--------+----------+---------+---------+
+|marocain|Casablanca|726167.38|3320     |
+|marocain|Agadir    |570645.26|2561     |
+|pizza   |Marrakech |402143.88|1891     |
+|pizza   |Rabat     |363823.82|1721     |
+|sushi   |Casablanca|363140.33|1286     |
+|marocain|Marrakech |362085.77|1691     |
+|pizza   |Casablanca|353738.15|1678     |
+|pizza   |Fes       |346413.76|1629     |
+|burger  |Casablanca|340428.01|1955     |
+|pizza   |Tanger    |335594.38|1601     |
++--------+----------+---------+---------+
+only showing top 10 rows
+
+CA par catégorie (toutes villes) :
++----------+----------+---------+----------------+
+|category  |ca_mad    |commandes|panier_moyen_mad|
++----------+----------+---------+----------------+
+|pizza     |2361305.52|11208    |210.68          |
+|marocain  |2330466.93|10677    |218.27          |
+|sushi     |1171872.08|4176     |280.62          |
+|burger    |875595.82 |5060     |173.04          |
+|healthy   |623056.25 |3123     |199.51          |
+|tacos     |604436.22 |4282     |141.16          |
+|shawarma  |598537.89 |4991     |119.92          |
+|patisserie|234374.82 |2511     |93.34           |
++----------+----------+---------+----------------+
+
+Matrice CA (k MAD) catégorie × ville :
++----------+------+----------+-----+---------+------+-----+-----+------+
+|category  |Agadir|Casablanca|Fes  |Marrakech|Meknes|Oujda|Rabat|Tanger|
++----------+------+----------+-----+---------+------+-----+-----+------+
+|burger    |NULL  |340.4     |NULL |89.2     |96.2  |NULL |127.2|222.5 |
+|healthy   |32.8  |308.1     |50.9 |13.4     |NULL  |67.9 |122.1|27.8  |
+|marocain  |570.6 |726.2     |189.5|362.1    |82.4  |278.5|79.1 |42.1  |
+|patisserie|43.8  |15.0      |24.8 |NULL     |NULL  |59.4 |63.4 |27.9  |
+|pizza     |179.2 |353.7     |346.4|402.1    |137.6 |242.8|363.8|335.6 |
+|shawarma  |76.3  |196.7     |38.0 |52.5     |25.2  |102.6|80.0 |27.2  |
+|sushi     |119.7 |363.1     |98.4 |157.0    |NULL  |68.6 |141.4|223.6 |
+|tacos     |44.6  |137.7     |124.0|175.8    |36.2  |13.1 |26.3 |46.6  |
++----------+------+----------+-----+---------+------+-----+-----+------+
+
+----- [cellule p3-14]
+== Parsed Logical Plan ==
+'Sort ['ca_mad DESC NULLS LAST], true
++- Aggregate [category#23, city#3], [category#23, city#3, round(sum(amount_mad#5), 2) AS ca_mad#1840, count(1) AS commandes#1842L]
+   +- Project [restaurant_id#1, order_id#0, customer_id#2, city#3, status#4, amount_mad#5, items_count#6, distance_km#7, courier_id#8, event_time#9, restaurant_name#1810, category#23]
+      +- Join Inner, (restaurant_id#1 = restaurant_id#20)
+         :- Deduplicate [order_id#0]
+         :  +- Filter (status#4 = DELIVERED)
+         :     +- Relation [order_id#0,restaurant_id#1,customer_id#2,city#3,status#4,amount_mad#5,items_count#6,distance_km#7,courier_id#8,event_time#9] json
+         +- Project [restaurant_id#20, name#21 AS restaurant_name#1810, category#23]
+            +- Relation [restaurant_id#20,name#21,city#22,category#23,latitude#24,longitude#25] json
+
+== Analyzed Logical Plan ==
+category: string, city: string, ca_mad: double, commandes: bigint
+Sort [ca_mad#1840 DESC NULLS LAST], true
++- Aggregate [category#23, city#3], [category#23, city#3, round(sum(amount_mad#5), 2) AS ca_mad#1840, count(1) AS commandes#1842L]
+   +- Project [restaurant_id#1, order_id#0, customer_id#2, city#3, status#4, amount_mad#5, items_count#6, distance_km#7, courier_id#8, event_time#9, restaurant_name#1810, category#23]
+      +- Join Inner, (restaurant_id#1 = restaurant_id#20)
+         :- Deduplicate [order_id#0]
+         :  +- Filter (status#4 = DELIVERED)
+         :     +- Relation [order_id#0,restaurant_id#1,customer_id#2,city#3,status#4,amount_mad#5,items_count#6,distance_km#7,courier_id#8,event_time#9] json
+         +- Project [restaurant_id#20, name#21 AS restaurant_name#1810, category#23]
+            +- Relation [restaurant_id#20,name#21,city#22,category#23,latitude#24,longitude#25] json
+
+== Optimized Logical Plan ==
+Sort [ca_mad#1840 DESC NULLS LAST], true
++- Aggregate [category#23, city#1852], [category#23, city#1852, round(sum(amount_mad#1856), 2) AS ca_mad#1840, count(1) AS commandes#1842L]
+   +- Project [city#1852, amount_mad#1856, category#23]
+      +- Join Inner, (restaurant_id#1848 = restaurant_id#20)
+         :- Filter isnotnull(restaurant_id#1848)
+         :  +- Aggregate [order_id#0], [first(restaurant_id#1, false) AS restaurant_id#1848, first(city#3, false) AS city#1852, first(amount_mad#5, false) AS amount_mad#1856]
+         :     +- Project [order_id#0, restaurant_id#1, city#3, amount_mad#5]
+         :        +- Filter (isnotnull(status#4) AND (status#4 = DELIVERED))
+         :           +- Relation [order_id#0,restaurant_id#1,customer_id#2,city#3,status#4,amount_mad#5,items_count#6,distance_km#7,courier_id#8,event_time#9] json
+         +- Project [restaurant_id#20, category#23]
+            +- Filter isnotnull(restaurant_id#20)
+               +- Relation [restaurant_id#20,name#21,city#22,category#23,latitude#24,longitude#25] json
+
+== Physical Plan ==
+AdaptiveSparkPlan isFinalPlan=true
++- == Final Plan ==
+   *(6) Sort [ca_mad#1840 DESC NULLS LAST], true, 0
+   +- AQEShuffleRead coalesced
+      +- ShuffleQueryStage 3
+         +- Exchange rangepartitioning(ca_mad#1840 DESC NULLS LAST, 8), ENSURE_REQUIREMENTS, [plan_id=1185]
+            +- *(5) HashAggregate(keys=[category#23, city#1852], functions=[sum(amount_mad#1856), count(1)], output=[category#23, city#1852, ca_mad#1840, commandes#1842L])
+               +- AQEShuffleRead coalesced
+                  +- ShuffleQueryStage 2
+                     +- Exchange hashpartitioning(category#23, city#1852, 8), ENSURE_REQUIREMENTS, [plan_id=1144]
+                        +- *(4) HashAggregate(keys=[category#23, city#1852], functions=[partial_sum(amount_mad#1856), partial_count(1)], output=[category#23, city#1852, sum#1867, count#1868L])
+                           +- *(4) Project [city#1852, amount_mad#1856, category#23]
+                              +- *(4) BroadcastHashJoin [restaurant_id#1848], [restaurant_id#20], Inner, BuildRight, false
+                                 :- *(4) Filter isnotnull(restaurant_id#1848)
+                                 :  +- SortAggregate(key=[order_id#0], functions=[first(restaurant_id#1, false), first(city#3, false), first(amount_mad#5, false)], output=[restaurant_id#1848, city#1852, amount_mad#1856])
+                                 :     +- *(3) Sort [order_id#0 ASC NULLS FIRST], false, 0
+                                 :        +- AQEShuffleRead coalesced
+                                 :           +- ShuffleQueryStage 0
+                                 :              +- Exchange hashpartitioning(order_id#0, 8), ENSURE_REQUIREMENTS, [plan_id=1023]
+                                 :                 +- SortAggregate(key=[order_id#0], functions=[partial_first(restaurant_id#1, false), partial_first(city#3, false), partial_first(amount_mad#5, false)], output=[order_id#0, first#1875, valueSet#1876, first#1877, valueSet#1878, first#1879, valueSet#1880])
+                                 :                    +- *(1) Sort [order_id#0 ASC NULLS FIRST], false, 0
+                                 :                       +- *(1) Project [order_id#0, restaurant_id#1, city#3, amount_mad#5]
+                                 :                          +- *(1) Filter (isnotnull(status#4) AND (status#4 = DELIVERED))
+                                 :                             +- FileScan json [order_id#0,restaurant_id#1,city#3,status#4,amount_mad#5] Batched: false, DataFilters: [isnotnull(status#4), (status#4 = DELIVERED)], Format: JSON, Location: InMemoryFileIndex(1 paths)[s3a://lake/bronze/history/orders_history.jsonl], PartitionFilters: [], PushedFilters: [IsNotNull(status), EqualTo(status,DELIVERED)], ReadSchema: struct<order_id:string,restaurant_id:string,city:string,status:string,amount_mad:double>
+                                 +- BroadcastQueryStage 1
+                                    +- BroadcastExchange HashedRelationBroadcastMode(List(input[0, string, false]),false), [plan_id=1043]
+                                       +- *(2) Filter isnotnull(restaurant_id#20)
+                                          +- FileScan json [restaurant_id#20,category#23] Batched: false, DataFilters: [isnotnull(restaurant_id#20)], Format: JSON, Location: InMemoryFileIndex(1 paths)[file:/workspace/data/restaurants.json], PartitionFilters: [], PushedFilters: [IsNotNull(restaurant_id)], ReadSchema: struct<restaurant_id:string,category:string>
++- == Initial Plan ==
+   Sort [ca_mad#1840 DESC NULLS LAST], true, 0
+   +- Exchange rangepartitioning(ca_mad#1840 DESC NULLS LAST, 8), ENSURE_REQUIREMENTS, [plan_id=982]
+      +- HashAggregate(keys=[category#23, city#1852], functions=[sum(amount_mad#1856), count(1)], output=[category#23, city#1852, ca_mad#1840, commandes#1842L])
+         +- Exchange hashpartitioning(category#23, city#1852, 8), ENSURE_REQUIREMENTS, [plan_id=979]
+            +- HashAggregate(keys=[category#23, city#1852], functions=[partial_sum(amount_mad#1856), partial_count(1)], output=[category#23, city#1852, sum#1867, count#1868L])
+               +- Project [city#1852, amount_mad#1856, category#23]
+                  +- BroadcastHashJoin [restaurant_id#1848], [restaurant_id#20], Inner, BuildRight, false
+                     :- Filter isnotnull(restaurant_id#1848)
+                     :  +- SortAggregate(key=[order_id#0], functions=[first(restaurant_id#1, false), first(city#3, false), first(amount_mad#5, false)], output=[restaurant_id#1848, city#1852, amount_mad#1856])
+                     :     +- Sort [order_id#0 ASC NULLS FIRST], false, 0
+                     :        +- Exchange hashpartitioning(order_id#0, 8), ENSURE_REQUIREMENTS, [plan_id=969]
+                     :           +- SortAggregate(key=[order_id#0], functions=[partial_first(restaurant_id#1, false), partial_first(city#3, false), partial_first(amount_mad#5, false)], output=[order_id#0, first#1875, valueSet#1876, first#1877, valueSet#1878, first#1879, valueSet#1880])
+                     :              +- Sort [order_id#0 ASC NULLS FIRST], false, 0
+                     :                 +- Project [order_id#0, restaurant_id#1, city#3, amount_mad#5]
+                     :                    +- Filter (isnotnull(status#4) AND (status#4 = DELIVERED))
+                     :                       +- FileScan json [order_id#0,restaurant_id#1,city#3,status#4,amount_mad#5] Batched: false, DataFilters: [isnotnull(status#4), (status#4 = DELIVERED)], Format: JSON, Location: InMemoryFileIndex(1 paths)[s3a://lake/bronze/history/orders_history.jsonl], PartitionFilters: [], PushedFilters: [IsNotNull(status), EqualTo(status,DELIVERED)], ReadSchema: struct<order_id:string,restaurant_id:string,city:string,status:string,amount_mad:double>
+                     +- BroadcastExchange HashedRelationBroadcastMode(List(input[0, string, false]),false), [plan_id=974]
+                        +- Filter isnotnull(restaurant_id#20)
+                           +- FileScan json [restaurant_id#20,category#23] Batched: false, DataFilters: [isnotnull(restaurant_id#20)], Format: JSON, Location: InMemoryFileIndex(1 paths)[file:/workspace/data/restaurants.json], PartitionFilters: [], PushedFilters: [IsNotNull(restaurant_id)], ReadSchema: struct<restaurant_id:string,category:string>
+
+
+📏 Stratégie de jointure physique : BroadcastHashJoin
+----- [cellule p3-16]
+BroadcastHashJoin (choix Catalyst)   médiane 0.450 s   [0.776, 0.45, 0.392, 0.493, 0.414]
+SortMergeJoin (hint merge)           médiane 0.492 s   [0.587, 0.492, 0.436, 0.493, 0.444]
+----- [cellule p3-18]
++-------------+-----------------+---------+-----------------------+----------+--------+
+|restaurant_id|commandes_livrees|ca_mad   |name                   |city      |category|
++-------------+-----------------+---------+-----------------------+----------+--------+
+|R-157        |1863             |416203.57|Bab Fassia Dakhla      |Agadir    |marocain|
+|R-188        |1157             |242785.2 |Forno Roma Lazaret     |Oujda     |pizza   |
+|R-013        |904              |106559.56|Shawarma Express Maarif|Casablanca|shawarma|
+|R-147        |890              |154244.92|Smash Spot Iberia      |Tanger    |burger  |
+|R-012        |728              |152653.9 |Forno Mamma Oasis      |Casablanca|pizza   |
++-------------+-----------------+---------+-----------------------+----------+--------+
+
+Top 5 identique à la Partie 2 (RDD) : True
+----- [cellule p3-20]
+Résultat identique pour les 3 variantes : {'long': 38467, 'court': 40558, 'moyen': 71256}
+UDF Python               médiane 0.346 s   moyenne 0.359 s   [0.426, 0.333, 0.319, 0.346, 0.37]
+UDF pandas (Arrow)       médiane 0.281 s   moyenne 0.308 s   [0.269, 0.271, 0.281, 0.382, 0.338]
+when/otherwise (natif)   médiane 0.134 s   moyenne 0.147 s   [0.131, 0.134, 0.133, 0.165, 0.171]
+
+📏 Opérateurs Python dans les plans physiques : {'UDF Python': ['BatchEvalPython'], 'UDF pandas (Arrow)': ['ArrowEvalPython'], 'when/otherwise (natif)': []}
+----- [cellule p3-22]
+Écriture : 9.342 s — lignes relues : 147244 (attendu 150281 - 3037 doublons = 147244)
++----------+-----+
+|      city|count|
++----------+-----+
+|    Agadir|17299|
+|Casablanca|40304|
+|       Fes|14734|
+| Marrakech|20489|
+|    Meknes| 6534|
+|     Oujda|14666|
+|     Rabat|17575|
+|    Tanger|15643|
++----------+-----+
+
+root
+ |-- restaurant_id: string (nullable = true)
+ |-- order_id: string (nullable = true)
+ |-- customer_id: string (nullable = true)
+ |-- status: string (nullable = true)
+ |-- amount_mad: double (nullable = true)
+ |-- items_count: integer (nullable = true)
+ |-- distance_km: double (nullable = true)
+ |-- courier_id: string (nullable = true)
+ |-- event_time: timestamp (nullable = true)
+ |-- restaurant_name: string (nullable = true)
+ |-- category: string (nullable = true)
+ |-- event_date: date (nullable = true)
+ |-- distance_band: string (nullable = true)
+ |-- city: string (nullable = true)
+
+['PartitionFilters: [isnotnull(city#10153), (city#10153 = Casablanca)]']
+----- [cellule p3-24]
+✔ Scénario A : plans vérifiés, lecture S3 (aucun InMemoryTableScan)
+✔ Scénario B : plans vérifiés, lecture depuis le cache (InMemoryTableScan)
+Toutes les exécutions (chauffe + 5 passes) ont produit le CA de la Partie 2 ✔
+----- [cellule p3-25]
+
+📏 Scénario A_bout_en_bout_S3
+Variante                    mediane_s        moyenne_s     ecart_type_s             jobs           stages   stages_ignores           tachestemps_executors_s       lecture_Mo shuffle_ecrit_Ko  accélération
+RDD                             0.847            0.848            0.151              1.0              3.0              0.0             24.0            5.043            34.42            579.5          1.0x
+DataFrame                       0.369            0.347            0.041              3.0              3.0              3.0             10.0             0.93            34.42            837.9          2.3x
+DataFrame sans AQE              0.335            0.337            0.046              1.0              3.0              0.0             24.0             1.18            34.42            841.1         2.53x
+SQL                             0.357            0.373            0.046              3.0              3.0              3.0             10.0            0.988            34.42            837.9         2.37x
+
+📏 Scénario B_donnees_en_cache
+Variante                    mediane_s        moyenne_s     ecart_type_s             jobs           stages   stages_ignores           tachestemps_executors_s       lecture_Mo shuffle_ecrit_Ko  accélération
+RDD (cache)                     0.637            0.619            0.077              1.0              3.0              0.0             24.0            3.758             7.08            579.5          1.0x
+DataFrame (cache)               0.224            0.234            0.051              3.0              3.0              3.0             10.0            0.285             6.98            837.9         2.84x
+
+Executors identiques avant/après le benchmark : ['0', '1', '2', '3']
+----- [cellule p3-27]
+===== Lineage RDD (Partie 2)
+(8) PythonRDD[1219] at RDD at PythonRDD.scala:53 []
+ |  MapPartitionsRDD[1218] at mapPartitions at PythonRDD.scala:160 []
+ |  ShuffledRDD[1217] at partitionBy at <unknown>:0 []
+ +-(8) PairwiseRDD[1216] at reduceByKey at /tmp/ipykernel_3165/2621212028.py:4 []
+    |  PythonRDD[1215] at reduceByKey at /tmp/ipykernel_3165/2621212028.py:4 []
+    |  MapPartitionsRDD[1214] at mapPartitions at PythonRDD.scala:160 []
+    |  ShuffledRDD[1213] at partitionBy at <unknown>:0 []
+    +-(8) PairwiseRDD[1212] at reduceByKey at /tmp/ipykernel_3165/2621212028.py:4 []
+       |  PythonRDD[1211] at reduceByKey at /tmp/ipykernel_3165/2621212028.py:4 []
+       |  s3a://lake/bronze/history/orders_history.jsonl MapPartitionsRDD[1210] at textFile at NativeMethodAccessorImpl.java:0 []
+       |  s3a://lake/bronze/history/orders_history.jsonl HadoopRDD[1209] at textFile at NativeMethodAccessorImpl.java:0 []
+
+===== Plan DataFrame — explain('formatted')
+== Physical Plan ==
+AdaptiveSparkPlan (26)
++- == Final Plan ==
+   * HashAggregate (15)
+   +- AQEShuffleRead (14)
+      +- ShuffleQueryStage (13), Statistics(sizeInBytes=272.0 B, rowCount=8)
+         +- Exchange (12)
+            +- * HashAggregate (11)
+               +- SortAggregate (10)
+                  +- * Sort (9)
+                     +- AQEShuffleRead (8)
+                        +- ShuffleQueryStage (7), Statistics(sizeInBytes=3.3 MiB, rowCount=4.60E+4)
+                           +- Exchange (6)
+                              +- SortAggregate (5)
+                                 +- * Sort (4)
+                                    +- * Project (3)
+                                       +- * Filter (2)
+                                          +- Scan json  (1)
++- == Initial Plan ==
+   HashAggregate (25)
+   +- Exchange (24)
+      +- HashAggregate (23)
+         +- SortAggregate (22)
+            +- Sort (21)
+               +- Exchange (20)
+                  +- SortAggregate (19)
+                     +- Sort (18)
+                        +- Project (17)
+                           +- Filter (16)
+                              +- Scan json  (1)
+
+
+(1) Scan json 
+Output [4]: [order_id#14033, city#14036, status#14037, amount_mad#14038]
+Batched: false
+Location: InMemoryFileIndex [s3a://lake/bronze/history/orders_history.jsonl]
+PushedFilters: [IsNotNull(status), EqualTo(status,DELIVERED)]
+ReadSchema: struct<order_id:string,city:string,status:string,amount_mad:double>
+
+(2) Filter [codegen id : 1]
+Input [4]: [order_id#14033, city#14036, status#14037, amount_mad#14038]
+Condition : (isnotnull(status#14037) AND (status#14037 = DELIVERED))
+
+(3) Project [codegen id : 1]
+Output [3]: [order_id#14033, city#14036, amount_mad#14038]
+Input [4]: [order_id#14033, city#14036, status#14037, amount_mad#14038]
+
+(4) Sort [codegen id : 1]
+Input [3]: [order_id#14033, city#14036, amount_mad#14038]
+Arguments: [order_id#14033 ASC NULLS FIRST], false, 0
+
+(5) SortAggregate
+Input [3]: [order_id#14033, city#14036, amount_mad#14038]
+Keys [1]: [order_id#14033]
+Functions [2]: [partial_first(city#14036, false), partial_first(amount_mad#14038, false)]
+Aggregate Attributes [4]: [first#14088, valueSet#14089, first#14090, valueSet#14091]
+Results [5]: [order_id#14033, first#14092, valueSet#14093, first#14094, valueSet#14095]
+
+(6) Exchange
+Input [5]: [order_id#14033, first#14092, valueSet#14093, first#14094, valueSet#14095]
+Arguments: hashpartitioning(order_id#14033, 8), ENSURE_REQUIREMENTS, [plan_id=11433]
+
+(7) ShuffleQueryStage
+Output [5]: [order_id#14033, first#14092, valueSet#14093, first#14094, valueSet#14095]
+Arguments: 0
+
+(8) AQEShuffleRead
+Input [5]: [order_id#14033, first#14092, valueSet#14093, first#14094, valueSet#14095]
+Arguments: coalesced
+
+(9) Sort [codegen id : 2]
+Input [5]: [order_id#14033, first#14092, valueSet#14093, first#14094, valueSet#14095]
+Arguments: [order_id#14033 ASC NULLS FIRST], false, 0
+
+(10) SortAggregate
+Input [5]: [order_id#14033, first#14092, valueSet#14093, first#14094, valueSet#14095]
+Keys [1]: [order_id#14033]
+Functions [2]: [first(city#14036, false), first(amount_mad#14038, false)]
+Aggregate Attributes [2]: [first(city#14036)()#14072, first(amount_mad#14038)()#14076]
+Results [2]: [first(city#14036)()#14072 AS city#14073, first(amount_mad#14038)()#14076 AS amount_mad#14077]
+
+(11) HashAggregate [codegen id : 3]
+Input [2]: [city#14073, amount_mad#14077]
+Keys [1]: [city#14073]
+Functions [1]: [partial_sum(amount_mad#14077)]
+Aggregate Attributes [1]: [sum#14086]
+Results [2]: [city#14073, sum#14087]
+
+(12) Exchange
+Input [2]: [city#14073, sum#14087]
+Arguments: hashpartitioning(city#14073, 8), ENSURE_REQUIREMENTS, [plan_id=11480]
+
+(13) ShuffleQueryStage
+Output [2]: [city#14073, sum#14087]
+Arguments: 1
+
+(14) AQEShuffleRead
+Input [2]: [city#14073, sum#14087]
+Arguments: coalesced
+
+(15) HashAggregate [codegen id : 4]
+Input [2]: [city#14073, sum#14087]
+Keys [1]: [city#14073]
+Functions [1]: [sum(amount_mad#14077)]
+Aggregate Attributes [1]: [sum(amount_mad#14077)#14064]
+Results [2]: [city#14073, sum(amount_mad#14077)#14064 AS ca_mad#14065]
+
+(16) Filter
+Input [4]: [order_id#14033, city#14036, status#14037, amount_mad#14038]
+Condition : (isnotnull(status#14037) AND (status#14037 = DELIVERED))
+
+(17) Project
+Output [3]: [order_id#14033, city#14036, amount_mad#14038]
+Input [4]: [order_id#14033, city#14036, status#14037, amount_mad#14038]
+
+(18) Sort
+Input [3]: [order_id#14033, city#14036, amount_mad#14038]
+Arguments: [order_id#14033 ASC NULLS FIRST], false, 0
+
+(19) SortAggregate
+Input [3]: [order_id#14033, city#14036, amount_mad#14038]
+Keys [1]: [order_id#14033]
+Functions [2]: [partial_first(city#14036, false), partial_first(amount_mad#14038, false)]
+Aggregate Attributes [4]: [first#14088, valueSet#14089, first#14090, valueSet#14091]
+Results [5]: [order_id#14033, first#14092, valueSet#14093, first#14094, valueSet#14095]
+
+(20) Exchange
+Input [5]: [order_id#14033, first#14092, valueSet#14093, first#14094, valueSet#14095]
+Arguments: hashpartitioning(order_id#14033, 8), ENSURE_REQUIREMENTS, [plan_id=11401]
+
+(21) Sort
+Input [5]: [order_id#14033, first#14092, valueSet#14093, first#14094, valueSet#14095]
+Arguments: [order_id#14033 ASC NULLS FIRST], false, 0
+
+(22) SortAggregate
+Input [5]: [order_id#14033, first#14092, valueSet#14093, first#14094, valueSet#14095]
+Keys [1]: [order_id#14033]
+Functions [2]: [first(city#14036, false), first(amount_mad#14038, false)]
+Aggregate Attributes [2]: [first(city#14036)()#14072, first(amount_mad#14038)()#14076]
+Results [2]: [first(city#14036)()#14072 AS city#14073, first(amount_mad#14038)()#14076 AS amount_mad#14077]
+
+(23) HashAggregate
+Input [2]: [city#14073, amount_mad#14077]
+Keys [1]: [city#14073]
+Functions [1]: [partial_sum(amount_mad#14077)]
+Aggregate Attributes [1]: [sum#14086]
+Results [2]: [city#14073, sum#14087]
+
+(24) Exchange
+Input [2]: [city#14073, sum#14087]
+Arguments: hashpartitioning(city#14073, 8), ENSURE_REQUIREMENTS, [plan_id=11406]
+
+(25) HashAggregate
+Input [2]: [city#14073, sum#14087]
+Keys [1]: [city#14073]
+Functions [1]: [sum(amount_mad#14077)]
+Aggregate Attributes [1]: [sum(amount_mad#14077)#14064]
+Results [2]: [city#14073, sum(amount_mad#14077)#14064 AS ca_mad#14065]
+
+(26) AdaptiveSparkPlan
+Output [2]: [city#14073, ca_mad#14065]
+Arguments: isFinalPlan=true
+
+
+📏 Optimisations Catalyst visibles : ['PushedFilters: [IsNotNull(status), EqualTo(status,DELIVERED)]', 'ReadSchema: struct<order_id:string,city:string,status:string,amount_mad:double>']
+📏 Blocs de code généré (whole-stage codegen) : 4 — ids ['1', '2', '3', '4']
+----- [cellule p3-30]
+executor 3   172.22.0.8:33257       sbd-spark-worker-1   tâches=  302 CPU=   75.7 s  shuffle écrit= 14.56 Mo
+executor 2   172.22.0.8:37055       sbd-spark-worker-1   tâches=  289 CPU=   75.2 s  shuffle écrit= 14.73 Mo
+executor 1   172.22.0.9:42769       sbd-spark-worker-2   tâches=  307 CPU=   76.8 s  shuffle écrit= 17.26 Mo
+executor 0   172.22.0.9:45157       sbd-spark-worker-2   tâches=  319 CPU=   76.9 s  shuffle écrit= 18.59 Mo
+
+📏 Tâches par worker : {'sbd-spark-worker-1': 591, 'sbd-spark-worker-2': 626}
+----- [cellule p3-31]
+Écrits : 10_part3_results.json, 10_part3_benchmark.json, 10_part3_plans.txt
+----- [cellule p3-32]
+SparkSession arrêtée — DAG, stages et executors consultables dans le History Server : http://localhost:18080

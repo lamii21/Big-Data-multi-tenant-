@@ -1,0 +1,28 @@
+## Git
+?? docs/logs/10_part3_preflight.log
+4e153c9 feat(partie2): traitements RDD sur l'historique des commandes
+cde2a4f feat(donnees): reconstitution de producer.py et restaurants.json
+7e7ae7e feat(partie1): vérification du cluster et preuves de fonctionnement
+45cd529 chore: configuration Docker Compose de la plateforme Big Data
+
+## Docker
+jupyter	running	Up 2 hours
+kafka	running	Up 2 hours (healthy)
+minio	running	Up 2 hours (healthy)
+spark-history	running	Up 2 hours
+spark-master	running	Up 2 hours (healthy)
+spark-worker-1	running	Up 2 hours
+spark-worker-2	running	Up 2 hours
+workers ALIVE: 2 | cores: 8 | apps actives: 0
+
+## Bronze history : SHA-256 relu depuis MinIO (attendu 57142d2d...)
+Date      : 2026-11-14 17:30:59 UTC 
+Size      : 32 MiB 
+57142d2dce9a7c62af57ad79b068882fdb107c1ab32bf6d305c073e2c6adad25 *-
+
+## Référentiel restaurants.json (versionné, attendu 8cac39b1...)
+8cac39b13a7f07d1ab4652435623e572acd435ae038f4da798bbd984af72c007 *data/restaurants.json
+200
+
+## Silver existant ?
+[2026-11-14 16:13:59 UTC]    13B STANDARD .keep

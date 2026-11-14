@@ -1,0 +1,24 @@
+## mc ls --recursive local/lake/silver/orders_history/ (extrait + total)
+[2026-11-14 18:19:31 UTC]     0B STANDARD _SUCCESS
+[2026-11-14 18:19:27 UTC]  64KiB STANDARD city=Agadir/part-00000-b6124970-d395-4586-9232-1e934c8deefd.c000.snappy.parquet
+[2026-11-14 18:19:28 UTC]  66KiB STANDARD city=Agadir/part-00001-b6124970-d395-4586-9232-1e934c8deefd.c000.snappy.parquet
+[2026-11-14 18:19:28 UTC]  65KiB STANDARD city=Agadir/part-00002-b6124970-d395-4586-9232-1e934c8deefd.c000.snappy.parquet
+[2026-11-14 18:19:29 UTC]  64KiB STANDARD city=Agadir/part-00003-b6124970-d395-4586-9232-1e934c8deefd.c000.snappy.parquet
+[2026-11-14 18:19:30 UTC]  63KiB STANDARD city=Agadir/part-00004-b6124970-d395-4586-9232-1e934c8deefd.c000.snappy.parquet
+[2026-11-14 18:19:30 UTC]  66KiB STANDARD city=Agadir/part-00005-b6124970-d395-4586-9232-1e934c8deefd.c000.snappy.parquet
+[2026-11-14 18:19:30 UTC]  65KiB STANDARD city=Agadir/part-00006-b6124970-d395-4586-9232-1e934c8deefd.c000.snappy.parquet
+[2026-11-14 18:19:31 UTC]  64KiB STANDARD city=Agadir/part-00007-b6124970-d395-4586-9232-1e934c8deefd.c000.snappy.parquet
+[2026-11-14 18:19:27 UTC] 148KiB STANDARD city=Casablanca/part-00000-b6124970-d395-4586-9232-1e934c8deefd.c000.snappy.parquet
+[2026-11-14 18:19:28 UTC] 145KiB STANDARD city=Casablanca/part-00001-b6124970-d395-4586-9232-1e934c8deefd.c000.snappy.parquet
+[2026-11-14 18:19:28 UTC] 146KiB STANDARD city=Casablanca/part-00002-b6124970-d395-4586-9232-1e934c8deefd.c000.snappy.parquet
+...
+objets: 65
+      8 city=Agadir
+      8 city=Casablanca
+      8 city=Fes
+      8 city=Marrakech
+      8 city=Meknes
+      8 city=Oujda
+      8 city=Rabat
+      8 city=Tanger
+4.3MiB	65 objects	lake/silver/orders_history

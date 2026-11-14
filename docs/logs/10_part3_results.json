@@ -1,0 +1,582 @@
+{
+  "conditions": {
+    "app_id": "app-20261114181835-0005",
+    "spark_version": "3.5.9",
+    "master": "spark://spark-master:7077",
+    "default_parallelism": 8,
+    "executors": [
+      "0",
+      "1",
+      "2",
+      "3"
+    ],
+    "spark.sql.shuffle.partitions": "8",
+    "spark.sql.adaptive.enabled": "true",
+    "spark.sql.autoBroadcastJoinThreshold": "10485760b"
+  },
+  "verification_schema": {
+    "lignes": 150281,
+    "non_conformes": 0,
+    "nulls": {
+      "order_id": 0,
+      "restaurant_id": 0,
+      "customer_id": 0,
+      "city": 0,
+      "status": 0,
+      "amount_mad": 0,
+      "items_count": 0,
+      "distance_km": 0,
+      "courier_id": 0,
+      "event_time": 0
+    },
+    "restaurants": 200,
+    "partitions_lecture": 8
+  },
+  "inference_schema": {
+    "explicite": [
+      [
+        0.033,
+        0
+      ],
+      [
+        0.032,
+        0
+      ],
+      [
+        0.058,
+        0
+      ]
+    ],
+    "inference": [
+      [
+        1.588,
+        1
+      ],
+      [
+        0.532,
+        1
+      ],
+      [
+        0.508,
+        1
+      ]
+    ]
+  },
+  "delivered": {
+    "brut": 46977,
+    "uniques": 46028
+  },
+  "ca_panier_par_ville": [
+    {
+      "city": "Casablanca",
+      "ca_mad": 2441036.72,
+      "commandes": 12592,
+      "panier_moyen_mad": 193.86
+    },
+    {
+      "city": "Marrakech",
+      "ca_mad": 1252086.8,
+      "commandes": 6399,
+      "panier_moyen_mad": 195.67
+    },
+    {
+      "city": "Agadir",
+      "ca_mad": 1066986.41,
+      "commandes": 5407,
+      "panier_moyen_mad": 197.33
+    },
+    {
+      "city": "Rabat",
+      "ca_mad": 1003432.78,
+      "commandes": 5498,
+      "panier_moyen_mad": 182.51
+    },
+    {
+      "city": "Tanger",
+      "ca_mad": 953252.19,
+      "commandes": 4893,
+      "panier_moyen_mad": 194.82
+    },
+    {
+      "city": "Fes",
+      "ca_mad": 872019.55,
+      "commandes": 4599,
+      "panier_moyen_mad": 189.61
+    },
+    {
+      "city": "Oujda",
+      "ca_mad": 833093.75,
+      "commandes": 4594,
+      "panier_moyen_mad": 181.34
+    },
+    {
+      "city": "Meknes",
+      "ca_mad": 377737.33,
+      "commandes": 2046,
+      "panier_moyen_mad": 184.62
+    }
+  ],
+  "ca_total_mad": 8799645.53,
+  "ca_categorie_ville": [
+    {
+      "category": "marocain",
+      "city": "Casablanca",
+      "ca_mad": 726167.38,
+      "commandes": 3320
+    },
+    {
+      "category": "marocain",
+      "city": "Agadir",
+      "ca_mad": 570645.26,
+      "commandes": 2561
+    },
+    {
+      "category": "pizza",
+      "city": "Marrakech",
+      "ca_mad": 402143.88,
+      "commandes": 1891
+    },
+    {
+      "category": "pizza",
+      "city": "Rabat",
+      "ca_mad": 363823.82,
+      "commandes": 1721
+    },
+    {
+      "category": "sushi",
+      "city": "Casablanca",
+      "ca_mad": 363140.33,
+      "commandes": 1286
+    },
+    {
+      "category": "marocain",
+      "city": "Marrakech",
+      "ca_mad": 362085.77,
+      "commandes": 1691
+    },
+    {
+      "category": "pizza",
+      "city": "Casablanca",
+      "ca_mad": 353738.15,
+      "commandes": 1678
+    },
+    {
+      "category": "pizza",
+      "city": "Fes",
+      "ca_mad": 346413.76,
+      "commandes": 1629
+    },
+    {
+      "category": "burger",
+      "city": "Casablanca",
+      "ca_mad": 340428.01,
+      "commandes": 1955
+    },
+    {
+      "category": "pizza",
+      "city": "Tanger",
+      "ca_mad": 335594.38,
+      "commandes": 1601
+    },
+    {
+      "category": "healthy",
+      "city": "Casablanca",
+      "ca_mad": 308126.11,
+      "commandes": 1540
+    },
+    {
+      "category": "marocain",
+      "city": "Oujda",
+      "ca_mad": 278498.19,
+      "commandes": 1286
+    },
+    {
+      "category": "pizza",
+      "city": "Oujda",
+      "ca_mad": 242785.2,
+      "commandes": 1157
+    },
+    {
+      "category": "sushi",
+      "city": "Tanger",
+      "ca_mad": 223620.37,
+      "commandes": 807
+    },
+    {
+      "category": "burger",
+      "city": "Tanger",
+      "ca_mad": 222483.07,
+      "commandes": 1283
+    },
+    {
+      "category": "shawarma",
+      "city": "Casablanca",
+      "ca_mad": 196735.11,
+      "commandes": 1659
+    },
+    {
+      "category": "marocain",
+      "city": "Fes",
+      "ca_mad": 189491.68,
+      "commandes": 869
+    },
+    {
+      "category": "pizza",
+      "city": "Agadir",
+      "ca_mad": 179168.23,
+      "commandes": 873
+    },
+    {
+      "category": "tacos",
+      "city": "Marrakech",
+      "ca_mad": 175787.34,
+      "commandes": 1237
+    },
+    {
+      "category": "sushi",
+      "city": "Marrakech",
+      "ca_mad": 157021.56,
+      "commandes": 543
+    },
+    {
+      "category": "sushi",
+      "city": "Rabat",
+      "ca_mad": 141396.77,
+      "commandes": 512
+    },
+    {
+      "category": "tacos",
+      "city": "Casablanca",
+      "ca_mad": 137748.93,
+      "commandes": 998
+    },
+    {
+      "category": "pizza",
+      "city": "Meknes",
+      "ca_mad": 137638.1,
+      "commandes": 658
+    },
+    {
+      "category": "burger",
+      "city": "Rabat",
+      "ca_mad": 127246.03,
+      "commandes": 739
+    },
+    {
+      "category": "tacos",
+      "city": "Fes",
+      "ca_mad": 123996.9,
+      "commandes": 892
+    },
+    {
+      "category": "healthy",
+      "city": "Rabat",
+      "ca_mad": 122148.25,
+      "commandes": 611
+    },
+    {
+      "category": "sushi",
+      "city": "Agadir",
+      "ca_mad": 119660.91,
+      "commandes": 416
+    },
+    {
+      "category": "shawarma",
+      "city": "Oujda",
+      "ca_mad": 102642.39,
+      "commandes": 840
+    },
+    {
+      "category": "sushi",
+      "city": "Fes",
+      "ca_mad": 98392.82,
+      "commandes": 366
+    },
+    {
+      "category": "burger",
+      "city": "Meknes",
+      "ca_mad": 96240.34,
+      "commandes": 556
+    },
+    {
+      "category": "burger",
+      "city": "Marrakech",
+      "ca_mad": 89198.37,
+      "commandes": 527
+    },
+    {
+      "category": "marocain",
+      "city": "Meknes",
+      "ca_mad": 82448.37,
+      "commandes": 383
+    },
+    {
+      "category": "shawarma",
+      "city": "Rabat",
+      "ca_mad": 80019.17,
+      "commandes": 676
+    },
+    {
+      "category": "marocain",
+      "city": "Rabat",
+      "ca_mad": 79055.05,
+      "commandes": 368
+    },
+    {
+      "category": "shawarma",
+      "city": "Agadir",
+      "ca_mad": 76312.57,
+      "commandes": 634
+    },
+    {
+      "category": "sushi",
+      "city": "Oujda",
+      "ca_mad": 68639.32,
+      "commandes": 246
+    },
+    {
+      "category": "healthy",
+      "city": "Oujda",
+      "ca_mad": 67944.04,
+      "commandes": 330
+    },
+    {
+      "category": "patisserie",
+      "city": "Rabat",
+      "ca_mad": 63446.82,
+      "commandes": 679
+    },
+    {
+      "category": "patisserie",
+      "city": "Oujda",
+      "ca_mad": 59448.88,
+      "commandes": 650
+    },
+    {
+      "category": "shawarma",
+      "city": "Marrakech",
+      "ca_mad": 52497.63,
+      "commandes": 438
+    },
+    {
+      "category": "healthy",
+      "city": "Fes",
+      "ca_mad": 50916.8,
+      "commandes": 254
+    },
+    {
+      "category": "tacos",
+      "city": "Tanger",
+      "ca_mad": 46640.84,
+      "commandes": 330
+    },
+    {
+      "category": "tacos",
+      "city": "Agadir",
+      "ca_mad": 44581.56,
+      "commandes": 291
+    },
+    {
+      "category": "patisserie",
+      "city": "Agadir",
+      "ca_mad": 43807.16,
+      "commandes": 459
+    },
+    {
+      "category": "marocain",
+      "city": "Tanger",
+      "ca_mad": 42075.23,
+      "commandes": 199
+    },
+    {
+      "category": "shawarma",
+      "city": "Fes",
+      "ca_mad": 37962.46,
+      "commandes": 317
+    },
+    {
+      "category": "tacos",
+      "city": "Meknes",
+      "ca_mad": 36248.05,
+      "commandes": 257
+    },
+    {
+      "category": "healthy",
+      "city": "Agadir",
+      "ca_mad": 32810.72,
+      "commandes": 173
+    },
+    {
+      "category": "patisserie",
+      "city": "Tanger",
+      "ca_mad": 27874.13,
+      "commandes": 295
+    },
+    {
+      "category": "healthy",
+      "city": "Tanger",
+      "ca_mad": 27758.08,
+      "commandes": 143
+    },
+    {
+      "category": "shawarma",
+      "city": "Tanger",
+      "ca_mad": 27206.09,
+      "commandes": 235
+    },
+    {
+      "category": "tacos",
+      "city": "Rabat",
+      "ca_mad": 26296.87,
+      "commandes": 192
+    },
+    {
+      "category": "shawarma",
+      "city": "Meknes",
+      "ca_mad": 25162.47,
+      "commandes": 192
+    },
+    {
+      "category": "patisserie",
+      "city": "Fes",
+      "ca_mad": 24845.13,
+      "commandes": 272
+    },
+    {
+      "category": "patisserie",
+      "city": "Casablanca",
+      "ca_mad": 14952.7,
+      "commandes": 156
+    },
+    {
+      "category": "healthy",
+      "city": "Marrakech",
+      "ca_mad": 13352.25,
+      "commandes": 72
+    },
+    {
+      "category": "tacos",
+      "city": "Oujda",
+      "ca_mad": 13135.73,
+      "commandes": 85
+    }
+  ],
+  "top5_restaurants": [
+    {
+      "restaurant_id": "R-157",
+      "commandes_livrees": 1863,
+      "ca_mad": 416203.57,
+      "name": "Bab Fassia Dakhla",
+      "city": "Agadir",
+      "category": "marocain"
+    },
+    {
+      "restaurant_id": "R-188",
+      "commandes_livrees": 1157,
+      "ca_mad": 242785.2,
+      "name": "Forno Roma Lazaret",
+      "city": "Oujda",
+      "category": "pizza"
+    },
+    {
+      "restaurant_id": "R-013",
+      "commandes_livrees": 904,
+      "ca_mad": 106559.56,
+      "name": "Shawarma Express Maarif",
+      "city": "Casablanca",
+      "category": "shawarma"
+    },
+    {
+      "restaurant_id": "R-147",
+      "commandes_livrees": 890,
+      "ca_mad": 154244.92,
+      "name": "Smash Spot Iberia",
+      "city": "Tanger",
+      "category": "burger"
+    },
+    {
+      "restaurant_id": "R-012",
+      "commandes_livrees": 728,
+      "ca_mad": 152653.9,
+      "name": "Forno Mamma Oasis",
+      "city": "Casablanca",
+      "category": "pizza"
+    }
+  ],
+  "controles": {
+    "dataframe_egal_sql": true,
+    "egal_partie2_ca": true,
+    "egal_partie2_panier": true,
+    "egal_partie2_top5": true
+  },
+  "distance_band": {
+    "repartition": {
+      "long": 38467,
+      "court": 40558,
+      "moyen": 71256
+    },
+    "temps_s": {
+      "UDF Python": [
+        0.426,
+        0.333,
+        0.319,
+        0.346,
+        0.37
+      ],
+      "UDF pandas (Arrow)": [
+        0.269,
+        0.271,
+        0.281,
+        0.382,
+        0.338
+      ],
+      "when/otherwise (natif)": [
+        0.131,
+        0.134,
+        0.133,
+        0.165,
+        0.171
+      ]
+    },
+    "medianes_s": {
+      "UDF Python": 0.346,
+      "UDF pandas (Arrow)": 0.281,
+      "when/otherwise (natif)": 0.134
+    },
+    "operateurs_python": {
+      "UDF Python": [
+        "BatchEvalPython"
+      ],
+      "UDF pandas (Arrow)": [
+        "ArrowEvalPython"
+      ],
+      "when/otherwise (natif)": []
+    }
+  },
+  "jointure_temps_s": {
+    "BroadcastHashJoin (choix Catalyst)": [
+      0.776,
+      0.45,
+      0.392,
+      0.493,
+      0.414
+    ],
+    "SortMergeJoin (hint merge)": [
+      0.587,
+      0.492,
+      0.436,
+      0.493,
+      0.444
+    ]
+  },
+  "silver": {
+    "chemin": "s3a://lake/silver/orders_history",
+    "lignes": 147244,
+    "ecriture_s": 9.342,
+    "partitionnement": "city"
+  },
+  "taches_par_worker": {
+    "sbd-spark-worker-1": 591,
+    "sbd-spark-worker-2": 626
+  }
+}
