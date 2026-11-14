@@ -1,0 +1,38 @@
+
+==================== État des services (docker compose ps) ====================
+SERVICE          STATE     STATUS                          PORTS
+jupyter          running   Up About a minute               0.0.0.0:4040-4042->4040-4042/tcp, [::]:4040-4042->4040-4042/tcp, 0.0.0.0:8888->8888/tcp, [::]:8888->8888/tcp
+kafka            running   Up About a minute (healthy)     0.0.0.0:9094->9094/tcp, [::]:9094->9094/tcp
+kafka-init       exited    Exited (0) About a minute ago   
+minio            running   Up About a minute (healthy)     0.0.0.0:9000-9001->9000-9001/tcp, [::]:9000-9001->9000-9001/tcp
+minio-init       exited    Exited (0) About a minute ago   
+spark-history    running   Up About a minute               0.0.0.0:18080->18080/tcp, [::]:18080->18080/tcp
+spark-master     running   Up About a minute (healthy)     0.0.0.0:7077->7077/tcp, [::]:7077->7077/tcp, 0.0.0.0:8080->8080/tcp, [::]:8080->8080/tcp
+spark-worker-1   running   Up About a minute               0.0.0.0:8181->8181/tcp, [::]:8181->8181/tcp
+spark-worker-2   running   Up About a minute               0.0.0.0:8182->8182/tcp, [::]:8182->8182/tcp
+
+==================== Kafka — topic orders ====================
+Topic: orders	TopicId: 3sBFhCTpTHqSHBxMhCGcDA	PartitionCount: 3	ReplicationFactor: 1	Configs: 
+	Topic: orders	Partition: 0	Leader: 1	Replicas: 1	Isr: 1	Elr: 	LastKnownElr: 
+	Topic: orders	Partition: 1	Leader: 1	Replicas: 1	Isr: 1	Elr: 	LastKnownElr: 
+	Topic: orders	Partition: 2	Leader: 1	Replicas: 1	Isr: 1	Elr: 	LastKnownElr: 
+
+==================== MinIO — bucket lake (mc ls --recursive local/lake/) ====================
+[2026-11-14 16:13:58 UTC]    13B STANDARD bronze/.keep
+[2026-11-14 16:13:59 UTC]    18B STANDARD checkpoints/.keep
+[2026-11-14 16:13:59 UTC]    11B STANDARD gold/.keep
+[2026-11-14 16:13:59 UTC]    13B STANDARD silver/.keep
+
+==================== Spark Master — workers enregistrés (API JSON :8080/json) ====================
+Master : spark://spark-master:7077  status=ALIVE
+Workers ALIVE : 2   cores=8   memoire=10240 Mo
+  - 172.22.0.8       ALIVE  cores=4 memory=5120 Mo  ui=http://localhost:8181
+  - 172.22.0.9       ALIVE  cores=4 memory=5120 Mo  ui=http://localhost:8182
+
+==================== Interfaces web (code HTTP depuis l'hôte) ====================
+  http://localhost:8080        200
+  http://localhost:8181        200
+  http://localhost:8182        200
+  http://localhost:18080       200
+  http://localhost:9001        200
+  http://localhost:8888/api    200

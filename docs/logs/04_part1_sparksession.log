@@ -1,0 +1,35 @@
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+26/11/14 16:16:35 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+[Stage 0:>                                                         (0 + 8) / 16][Stage 0:=================>                                       (5 + 10) / 16][Stage 0:===================================>                     (10 + 6) / 16][Stage 1:>                                                         (0 + 8) / 16][Stage 1:=======>                                                  (2 + 8) / 16][Stage 1:=========================>                                (7 + 9) / 16][Stage 1:=================================================>       (14 + 2) / 16]                                                                                [Stage 2:================================>                         (9 + 7) / 16]                                                                                26/11/14 16:16:51 WARN MetricsConfig: Cannot locate configuration: tried hadoop-metrics2-s3a-file-system.properties,hadoop-metrics2.properties
+[Stage 3:>                                                          (0 + 8) / 8][Stage 3:============================================>              (6 + 2) / 8]                                                                                [Stage 5:==============>                                            (2 + 6) / 8]                                                                                ======================================================================
+PARTIE 1 — INFORMATIONS SPARKSESSION
+======================================================================
+Version Spark          : 3.5.9
+Master                 : spark://spark-master:7077
+appName                : part1-cluster-check
+applicationId          : app-20261114161636-0000
+defaultParallelism     : 8
+Driver (hôte)          : jupyter
+Spark UI (driver)      : http://jupyter:4040
+Executors enregistrés  : 4
+
+--- Exécution distribuée : quels workers traitent les partitions ? ---
+  spark-worker-1          500000 éléments
+  spark-worker-2          500000 éléments
+  Somme des carrés = 333332833333500000  (6.12s)
+
+--- Accès S3A / MinIO ---
+  Écriture + relecture s3a://lake/_smoke_tests/part1 : 10 lignes
+
+--- Connecteurs présents dans le classpath ---
+  [OK] Kafka source  org.apache.spark.sql.kafka010.KafkaSourceProvider
+  [OK] Delta Lake    io.delta.tables.DeltaTable
+  [OK] S3A           org.apache.hadoop.fs.s3a.S3AFileSystem
+  [OK] GraphFrames   org.graphframes.GraphFrame
+  [OK] GraphX        org.apache.spark.graphx.Graph
+  [OK] Modules Python : delta, graphframes
+
+======================================================================
+VERDICT : 2 worker(s) ont exécuté des tâches -> OK
+======================================================================
