@@ -1,0 +1,8 @@
+# Installé uniquement dans le conteneur Jupyter (driver interactif + producteur)
+jupyterlab==4.4.10
+# Clients Kafka Python (le producer.py fourni peut utiliser l'un ou l'autre)
+kafka-python==2.2.21
+confluent-kafka==2.10.1
+# Visualisation (DAG, sous-graphes Partie 6, graphiques du rapport)
+matplotlib==3.9.4
+networkx==3.4.2

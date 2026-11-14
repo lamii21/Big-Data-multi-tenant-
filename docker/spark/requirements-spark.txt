@@ -1,0 +1,5 @@
+# Installé sur TOUS les nœuds Spark (driver + executors), Python 3.10 (Ubuntu 22.04)
+# Versions compatibles PySpark 3.5 (numpy < 2 par prudence avec pyspark.pandas)
+numpy==1.26.4
+pandas==2.2.3
+pyarrow==16.1.0

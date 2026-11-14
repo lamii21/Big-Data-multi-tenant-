@@ -1,0 +1,24 @@
+.env
+# Données générées (le jeu d'historique se régénère avec producer.py)
+data/generated/
+*.jsonl
+# Python / Jupyter
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+# Scala / sbt
+graph/graphx-scala/target/
+graph/graphx-scala/project/target/
+graph/graphx-scala/project/project/
+.bsp/
+.metals/
+.bloop/
+# Spark local
+spark-warehouse/
+metastore_db/
+derby.log
+# IDE / OS
+.idea/
+.vscode/
+Thumbs.db
+.DS_Store

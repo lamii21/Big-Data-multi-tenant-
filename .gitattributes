@@ -1,0 +1,7 @@
+# Fichiers montés dans des conteneurs Linux : fins de ligne LF obligatoires
+* text=auto eol=lf
+*.pdf binary
+*.png binary
+*.jpg binary
+*.jar binary
+*.parquet binary

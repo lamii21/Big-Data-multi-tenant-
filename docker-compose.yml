@@ -1,0 +1,260 @@
+# =============================================================================
+# Plateforme Big Data SaaS multi-tenant — environnement reproductible
+#   Kafka (KRaft) · Spark 3.5.9 standalone (1 master + 2 workers) · MinIO (S3)
+#   Jupyter (driver PySpark) · Spark History Server · sbt (GraphX Scala, à la demande)
+#
+# Démarrage :  docker compose up -d --build
+# GraphX    :  docker compose --profile tools run --rm sbt sbt package
+# =============================================================================
+name: saas-bigdata
+
+# --- Blocs communs ------------------------------------------------------------
+x-spark-image: &spark-image
+  image: saas-bigdata/spark:3.5.9
+  build:
+    context: ./docker/spark
+    target: spark
+
+x-spark-env: &spark-env
+  # Lus par S3A (EnvironmentVariableCredentialsProvider) — hérités par les executors
+  AWS_ACCESS_KEY_ID: ${MINIO_ROOT_USER:-minioadmin}
+  AWS_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD:-minioadmin123}
+  AWS_REGION: us-east-1
+  SPARK_DAEMON_MEMORY: 512m
+
+x-spark-volumes: &spark-volumes
+  # Même chemin /workspace partout : un chemin local vu par le driver
+  # est identique pour les executors (code src/, référentiels data/).
+  - ./:/workspace
+  - ./conf/spark-defaults.conf:/opt/spark/conf/spark-defaults.conf:ro
+  - spark-events:/opt/spark/spark-events
+
+services:
+
+  # ---------------------------------------------------------------- Kafka -----
+  kafka:
+    image: apache/kafka:3.9.1
+    container_name: sbd-kafka
+    hostname: kafka
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller          # KRaft : pas de ZooKeeper
+      CLUSTER_ID: "GFeRrz3ASQylEnfoAfpLJw"
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      KAFKA_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
+      # kafka:9092 pour les conteneurs, localhost:9094 pour l'hôte Windows
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,EXTERNAL://localhost:9094
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"        # topic créé explicitement (3 partitions)
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+      KAFKA_LOG_RETENTION_HOURS: 168
+      KAFKA_HEAP_OPTS: "-Xms512m -Xmx1g"
+    ports:
+      - "9094:9094"
+    volumes:
+      - kafka-data:/var/lib/kafka/data
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server localhost:9092 >/dev/null 2>&1"]
+      interval: 10s
+      timeout: 10s
+      retries: 12
+      start_period: 20s
+    mem_limit: 2g
+    networks: [bigdata]
+
+  kafka-init:
+    image: apache/kafka:3.9.1
+    container_name: sbd-kafka-init
+    depends_on:
+      kafka:
+        condition: service_healthy
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        set -e
+        /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9092 \
+          --create --if-not-exists --topic orders --partitions 3 --replication-factor 1
+        /opt/kafka/bin/kafka-topics.sh --bootstrap-server kafka:9092 --describe --topic orders
+    restart: "no"
+    networks: [bigdata]
+
+  # ---------------------------------------------------------------- MinIO -----
+  # Fork communautaire pgsty : les images officielles minio/minio ne sont plus
+  # distribuées publiquement (Docker Hub / Quay exigent une authentification).
+  minio:
+    image: pgsty/minio:RELEASE.2026-08-04T00-00-00Z
+    container_name: sbd-minio
+    hostname: minio
+    command: ["server", "/data", "--console-address", ":9001"]
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin123}
+    ports:
+      - "9000:9000"   # API S3
+      - "9001:9001"   # Console web
+    volumes:
+      - minio-data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    mem_limit: 1g
+    networks: [bigdata]
+
+  minio-init:
+    image: pgsty/minio:RELEASE.2026-08-04T00-00-00Z   # contient déjà le client mc
+    container_name: sbd-minio-init
+    depends_on:
+      minio:
+        condition: service_healthy
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin123}
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        set -e
+        mc alias set local http://minio:9000 "$$MINIO_ROOT_USER" "$$MINIO_ROOT_PASSWORD"
+        mc mb --ignore-existing local/lake
+        # Marqueurs pour rendre visibles les couches dans la console dès la Partie 1
+        for p in bronze silver gold checkpoints; do echo "layer $$p" | mc pipe "local/lake/$$p/.keep"; done
+        mc ls --recursive local/lake
+    restart: "no"
+    networks: [bigdata]
+
+  # ---------------------------------------------------------------- Spark -----
+  spark-master:
+    <<: *spark-image
+    container_name: sbd-spark-master
+    hostname: spark-master
+    command: ["/opt/spark/bin/spark-class", "org.apache.spark.deploy.master.Master",
+              "--host", "spark-master", "--port", "7077", "--webui-port", "8080"]
+    environment:
+      <<: *spark-env
+      SPARK_PUBLIC_DNS: localhost
+    ports:
+      - "8080:8080"   # Spark Master UI
+      - "7077:7077"
+    volumes: *spark-volumes
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://localhost:8080 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    mem_limit: 1g
+    networks: [bigdata]
+
+  spark-worker-1:
+    <<: *spark-image
+    container_name: sbd-spark-worker-1
+    hostname: spark-worker-1
+    depends_on:
+      spark-master:
+        condition: service_healthy
+    # UI sur 8181 (le port 8081 est réservé par un autre projet : mongo-express)
+    command: ["/opt/spark/bin/spark-class", "org.apache.spark.deploy.worker.Worker",
+              "spark://spark-master:7077", "--cores", "4", "--memory", "5g",
+              "--webui-port", "8181", "--work-dir", "/tmp/spark-worker"]
+    environment:
+      <<: *spark-env
+      SPARK_PUBLIC_DNS: localhost
+    ports:
+      - "8181:8181"
+    volumes: *spark-volumes
+    mem_limit: 7g
+    networks: [bigdata]
+
+  spark-worker-2:
+    <<: *spark-image
+    container_name: sbd-spark-worker-2
+    hostname: spark-worker-2
+    depends_on:
+      spark-master:
+        condition: service_healthy
+    command: ["/opt/spark/bin/spark-class", "org.apache.spark.deploy.worker.Worker",
+              "spark://spark-master:7077", "--cores", "4", "--memory", "5g",
+              "--webui-port", "8182", "--work-dir", "/tmp/spark-worker"]
+    environment:
+      <<: *spark-env
+      SPARK_PUBLIC_DNS: localhost
+    ports:
+      - "8182:8182"
+    volumes: *spark-volumes
+    mem_limit: 7g
+    networks: [bigdata]
+
+  spark-history:
+    <<: *spark-image
+    container_name: sbd-spark-history
+    hostname: spark-history
+    command: ["/opt/spark/bin/spark-class", "org.apache.spark.deploy.history.HistoryServer"]
+    environment:
+      <<: *spark-env
+    ports:
+      - "18080:18080"
+    volumes: *spark-volumes
+    mem_limit: 1g
+    networks: [bigdata]
+
+  # ---------------------------------------------------------------- Jupyter ---
+  # Driver PySpark en mode client : les executors des workers se reconnectent
+  # au driver via le réseau Docker "bigdata".
+  jupyter:
+    image: saas-bigdata/jupyter:3.5.9
+    build:
+      context: ./docker/spark
+      target: jupyter
+    container_name: sbd-jupyter
+    hostname: jupyter
+    depends_on:
+      spark-master:
+        condition: service_healthy
+      kafka-init:
+        condition: service_completed_successfully
+      minio-init:
+        condition: service_completed_successfully
+    environment:
+      <<: *spark-env
+      JUPYTER_TOKEN: ${JUPYTER_TOKEN:-bigdata}
+      KAFKA_BOOTSTRAP: kafka:9092
+      LAKE_ROOT: s3a://lake
+    ports:
+      - "8888:8888"          # JupyterLab
+      - "4040-4042:4040-4042" # Spark UI des applications lancées depuis Jupyter
+    volumes: *spark-volumes
+    mem_limit: 6g
+    networks: [bigdata]
+
+  # ---------------------------------------------------------------- sbt -------
+  # Compilation du code GraphX (Scala 2.12) sans installation locale.
+  # Lancé uniquement à la demande : docker compose --profile tools run --rm sbt sbt package
+  sbt:
+    image: sbtscala/scala-sbt:eclipse-temurin-17.0.15_6_1.11.3_2.12.20
+    container_name: sbd-sbt
+    profiles: ["tools"]
+    working_dir: /workspace/graph/graphx-scala
+    volumes:
+      - ./:/workspace
+      - sbt-cache:/root/.cache
+      - ivy-cache:/root/.ivy2
+      - sbt-home:/root/.sbt
+    networks: [bigdata]
+
+networks:
+  bigdata:
+    name: saas-bigdata-net
+
+volumes:
+  kafka-data:
+  minio-data:
+  spark-events:
+  sbt-cache:
+  ivy-cache:
+  sbt-home:
