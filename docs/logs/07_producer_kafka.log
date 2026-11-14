@@ -1,0 +1,106 @@
+## Offsets AVANT (kafka-get-offsets.sh)
+orders:0:0
+orders:1:0
+orders:2:0
+
+## producer.py --mode kafka --rate 20 --time-scale 10 --duration 180
+[producer] Kafka kafka:9092 topic=orders rate=20/s time-scale=10.0 premier order_id=ORD-1000000
+[     9s] envoyés=189 (21.0/s) commandes=200 en_attente=403 retards_prog=11 doublons_prog=2 CREATED=189 PICKED_UP=0 DELIVERED=0 CANCELLED=0
+[    19s] envoyés=381 (20.0/s) commandes=398 en_attente=805 retards_prog=19 doublons_prog=11 CREATED=381 PICKED_UP=0 DELIVERED=0 CANCELLED=0
+[    29s] envoyés=576 (19.9/s) commandes=591 en_attente=1182 retards_prog=24 doublons_prog=17 CREATED=576 PICKED_UP=0 DELIVERED=0 CANCELLED=0
+[    39s] envoyés=767 (19.7/s) commandes=785 en_attente=1568 retards_prog=33 doublons_prog=21 CREATED=765 PICKED_UP=0 DELIVERED=0 CANCELLED=2
+[    49s] envoyés=956 (19.5/s) commandes=972 en_attente=1935 retards_prog=44 doublons_prog=24 CREATED=948 PICKED_UP=1 DELIVERED=0 CANCELLED=7
+[    59s] envoyés=1149 (19.5/s) commandes=1153 en_attente=2278 retards_prog=51 doublons_prog=28 CREATED=1124 PICKED_UP=10 DELIVERED=0 CANCELLED=15
+[    69s] envoyés=1341 (19.4/s) commandes=1308 en_attente=2549 retards_prog=63 doublons_prog=32 CREATED=1275 PICKED_UP=43 DELIVERED=0 CANCELLED=23
+[    79s] envoyés=1537 (19.5/s) commandes=1437 en_attente=2736 retards_prog=71 doublons_prog=35 CREATED=1404 PICKED_UP=101 DELIVERED=0 CANCELLED=32
+[    89s] envoyés=1731 (19.4/s) commandes=1561 en_attente=2914 retards_prog=81 doublons_prog=39 CREATED=1525 PICKED_UP=167 DELIVERED=1 CANCELLED=38
+[    99s] envoyés=1928 (19.5/s) commandes=1688 en_attente=3091 retards_prog=88 doublons_prog=40 CREATED=1650 PICKED_UP=231 DELIVERED=1 CANCELLED=46
+[   109s] envoyés=2122 (19.5/s) commandes=1770 en_attente=3139 retards_prog=100 doublons_prog=44 CREATED=1728 PICKED_UP=333 DELIVERED=7 CANCELLED=54
+[   119s] envoyés=2318 (19.5/s) commandes=1832 en_attente=3129 retards_prog=111 doublons_prog=47 CREATED=1788 PICKED_UP=446 DELIVERED=16 CANCELLED=68
+[   129s] envoyés=2513 (19.5/s) commandes=1896 en_attente=3127 retards_prog=122 doublons_prog=54 CREATED=1849 PICKED_UP=564 DELIVERED=26 CANCELLED=74
+[   139s] envoyés=2714 (19.5/s) commandes=1929 en_attente=3027 retards_prog=131 doublons_prog=58 CREATED=1882 PICKED_UP=699 DELIVERED=52 CANCELLED=81
+[   149s] envoyés=2928 (19.7/s) commandes=1952 en_attente=2884 retards_prog=140 doublons_prog=62 CREATED=1909 PICKED_UP=837 DELIVERED=91 CANCELLED=91
+[   159s] envoyés=3135 (19.7/s) commandes=1985 en_attente=2779 retards_prog=150 doublons_prog=68 CREATED=1942 PICKED_UP=969 DELIVERED=128 CANCELLED=96
+[   169s] envoyés=3355 (19.9/s) commandes=1995 en_attente=2595 retards_prog=155 doublons_prog=74 CREATED=1954 PICKED_UP=1114 DELIVERED=186 CANCELLED=101
+[   179s] envoyés=3576 (20.0/s) commandes=2008 en_attente=2421 retards_prog=168 doublons_prog=82 CREATED=1967 PICKED_UP=1253 DELIVERED=247 CANCELLED=109
+[producer] résumé {"orders_created": 2008, "first_order_id": "ORD-1000000", "last_order_id": "ORD-1002007", "messages_sent": 3576, "pending_not_sent": 2421, "late_scheduled": 168, "dup_scheduled": 82, "status_counts": {"CREATED": 1967, "PICKED_UP": 1253, "DELIVERED": 247, "CANCELLED": 109}, "elapsed_s": 179.3}
+
+## Offsets APRÈS run 1
+orders:0:1115
+orders:1:1294
+orders:2:1167
+
+## Fichier d'état
+{"next_order_num": 1002008}
+
+## Run 2 (15 s) : reprise du compteur d'order_id
+[producer] Kafka kafka:9092 topic=orders rate=20/s time-scale=10.0 premier order_id=ORD-1002008
+[     9s] envoyés=189 (21.0/s) commandes=200 en_attente=403 retards_prog=11 doublons_prog=2 CREATED=189 PICKED_UP=0 DELIVERED=0 CANCELLED=0
+[producer] résumé {"orders_created": 299, "first_order_id": "ORD-1002008", "last_order_id": "ORD-1002306", "messages_sent": 288, "pending_not_sent": 601, "late_scheduled": 12, "dup_scheduled": 6, "status_counts": {"CREATED": 288, "PICKED_UP": 0, "DELIVERED": 0, "CANCELLED": 0}, "elapsed_s": 14.3}
+
+## Offsets APRÈS run 2
+orders:0:1197
+orders:1:1396
+orders:2:1271
+
+## Consommation intégrale du topic (kafka-console-consumer)
+3864 docs/logs/07_kafka_messages.txt
+[2026-11-14 17:12:06,984] ERROR Error processing message, terminating consumer process:  (org.apache.kafka.tools.consumer.ConsoleConsumer)
+org.apache.kafka.common.errors.TimeoutException
+Processed a total of 3864 messages
+
+## Exemples de messages
+CreateTime:1794676078559	Partition:0	Offset:0	ORD-1000000	{"order_id":"ORD-1000000","restaurant_id":"R-176","customer_id":"C-12881","city":"Meknes","status":"CREATED","amount_mad":176.65,"items_count":3,"distance_km":3.7,"courier_id":"L-MEK-05","event_time":"2026-11-14T17:07:58Z"}
+CreateTime:1794676078559	Partition:0	Offset:1	ORD-1000001	{"order_id":"ORD-1000001","restaurant_id":"R-123","customer_id":"C-07847","city":"Fes","status":"CREATED","amount_mad":62.06,"items_count":1,"distance_km":2.3,"courier_id":"L-FES-13","event_time":"2026-11-14T17:07:58Z"}
+CreateTime:1794676078559	Partition:0	Offset:2	ORD-1000002	{"order_id":"ORD-1000002","restaurant_id":"R-191","customer_id":"C-14256","city":"Oujda","status":"CREATED","amount_mad":366.45,"items_count":4,"distance_km":0.4,"courier_id":"L-OUJ-09","event_time":"2026-11-14T17:07:58Z"}
+
+## Validation des messages consommés
+
+=== Référentiel data/restaurants.json
+  [OK] 200 restaurants exactement — 200 lignes
+  [OK] champs exacts et ordonnés — restaurant_id, name, city, category, latitude, longitude
+  [OK] restaurant_id uniques
+  [OK] restaurant_id séquentiels R-001..R-200
+  [OK] noms uniques et non vides
+  [OK] catégories connues — burger, healthy, marocain, patisserie, pizza, shawarma, sushi, tacos
+  [OK] villes connues
+  [OK] types numériques des coordonnées
+  [OK] coordonnées dans l'emprise urbaine de leur ville — hors emprise : []
+  [OK] coordonnées au Maroc (lat 27..36, lon -13..-1)
+  par ville     : {'Casablanca': 50, 'Rabat': 30, 'Marrakech': 30, 'Fes': 22, 'Tanger': 22, 'Agadir': 18, 'Meknes': 14, 'Oujda': 14}
+  par catégorie : {'burger': 22, 'sushi': 21, 'marocain': 42, 'shawarma': 23, 'tacos': 21, 'pizza': 44, 'healthy': 14, 'patisserie': 13}
+
+=== Événements docs/logs/07_kafka_messages.txt (format=kafka-console, commandes complètes attendues=False)
+  3864 messages lus
+  [OK] schéma : 10 champs exacts et ordonnés — 0 écarts
+  [OK] types (str / float / int) conformes — 0 écarts
+  [OK] formats (ORD-NNNNNNN, R-NNN, C-NNNNN, L-XXX-NN, ISO-8601 Z) — {}
+  [OK] statuts dans {CREATED, PICKED_UP, DELIVERED, CANCELLED}
+  [OK] bornes : amount_mad > 0, 1 <= items_count <= 10, 0 < distance_km <= 20
+  [OK] restaurant_id présents dans restaurants.json — inconnus : []
+  [OK] city = ville du restaurant — 0 écarts
+  [OK] code ville du livreur cohérent (L-CAS-.. à Casablanca) — 0 écarts
+  [OK] doublons = copies exactes (aucune collision d'identifiant) — 0 collisions
+  [OK] attributs de commande identiques dans tous ses événements — 0 commandes
+  [OK] transitions de statut valides et chronologiques — 0 commandes invalides
+          954  CREATED -> PICKED_UP
+          921  CREATED
+          221  CREATED -> PICKED_UP -> DELIVERED
+           95  CREATED -> CANCELLED
+           38  PICKED_UP
+           14  CREATED -> DELIVERED
+           10  PICKED_UP -> DELIVERED
+            8  CREATED -> PICKED_UP -> CANCELLED
+            2  CANCELLED
+            1  PICKED_UP -> CANCELLED
+  [OK] une commande = une seule partition (clé = order_id)
+  [OK] les 3 partitions reçoivent des messages — {0: 1197, 1: 1396, 2: 1271}
+  retards (> 45s) : 10 / 3796 = 0.26% ; > 10 min : 0 ; retard max = 2.42 min
+  doublons      : 68 / 3864 = 1.76%
+  [OK] retard maximal <= 15 min
+  montant livré (MAD) : {'min': 36.25, 'median': 171.84, 'max': 631.95, 'mean': 194.22}
+  bandes de distance  : {'court': 159, 'moyen': 86}
+  période : 2026-11-14 17:07:58 -> 2026-11-14 17:11:28
+
+=== BILAN : 24/24 contrôles OK
+EXIT=0

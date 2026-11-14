@@ -1,0 +1,200 @@
+{"restaurant_id": "R-001", "name": "Burger Lab Bourgogne", "city": "Casablanca", "category": "burger", "latitude": 33.542277, "longitude": -7.556894}
+{"restaurant_id": "R-002", "name": "Sakura Bar Belvedere", "city": "Casablanca", "category": "sushi", "latitude": 33.553206, "longitude": -7.655828}
+{"restaurant_id": "R-003", "name": "Le Tajine Zitoun Oasis", "city": "Casablanca", "category": "marocain", "latitude": 33.540936, "longitude": -7.569016}
+{"restaurant_id": "R-004", "name": "Burger Spot Belvedere", "city": "Casablanca", "category": "burger", "latitude": 33.5453, "longitude": -7.538298}
+{"restaurant_id": "R-005", "name": "Sushi Kyoto Sidi Maarouf", "city": "Casablanca", "category": "sushi", "latitude": 33.545283, "longitude": -7.629856}
+{"restaurant_id": "R-006", "name": "Shawarma Palace Hay Hassani", "city": "Casablanca", "category": "shawarma", "latitude": 33.535319, "longitude": -7.541351}
+{"restaurant_id": "R-007", "name": "Burger Spot Oasis", "city": "Casablanca", "category": "burger", "latitude": 33.536865, "longitude": -7.530879}
+{"restaurant_id": "R-008", "name": "Chez Atlas Belvedere", "city": "Casablanca", "category": "marocain", "latitude": 33.540576, "longitude": -7.650262}
+{"restaurant_id": "R-009", "name": "Maki Bar Bourgogne", "city": "Casablanca", "category": "sushi", "latitude": 33.577657, "longitude": -7.606782}
+{"restaurant_id": "R-010", "name": "Le Tacos Factory Sidi Maarouf", "city": "Casablanca", "category": "tacos", "latitude": 33.54954, "longitude": -7.566175}
+{"restaurant_id": "R-011", "name": "Sakura Time Oasis", "city": "Casablanca", "category": "sushi", "latitude": 33.570102, "longitude": -7.637124}
+{"restaurant_id": "R-012", "name": "Forno Mamma Oasis", "city": "Casablanca", "category": "pizza", "latitude": 33.542079, "longitude": -7.6146}
+{"restaurant_id": "R-013", "name": "Shawarma Express Maarif", "city": "Casablanca", "category": "shawarma", "latitude": 33.574278, "longitude": -7.603837}
+{"restaurant_id": "R-014", "name": "Le Tajine Atlas Bourgogne", "city": "Casablanca", "category": "marocain", "latitude": 33.566049, "longitude": -7.604612}
+{"restaurant_id": "R-015", "name": "Fresh Kitchen Anfa", "city": "Casablanca", "category": "healthy", "latitude": 33.53768, "longitude": -7.555702}
+{"restaurant_id": "R-016", "name": "Taco Street Hay Hassani", "city": "Casablanca", "category": "tacos", "latitude": 33.57938, "longitude": -7.604084}
+{"restaurant_id": "R-017", "name": "Riad Fassia Gauthier", "city": "Casablanca", "category": "marocain", "latitude": 33.571568, "longitude": -7.539446}
+{"restaurant_id": "R-018", "name": "Riad Mogador Belvedere", "city": "Casablanca", "category": "marocain", "latitude": 33.533494, "longitude": -7.606573}
+{"restaurant_id": "R-019", "name": "Douceurs Gazelle Oasis", "city": "Casablanca", "category": "patisserie", "latitude": 33.577343, "longitude": -7.658393}
+{"restaurant_id": "R-020", "name": "Sakura Wave Anfa", "city": "Casablanca", "category": "sushi", "latitude": 33.572273, "longitude": -7.612375}
+{"restaurant_id": "R-021", "name": "Pizza Del Sol Maarif", "city": "Casablanca", "category": "pizza", "latitude": 33.58246, "longitude": -7.537381}
+{"restaurant_id": "R-022", "name": "Forno Bella Oasis", "city": "Casablanca", "category": "pizza", "latitude": 33.580195, "longitude": -7.538127}
+{"restaurant_id": "R-023", "name": "Forno Vesuvio Belvedere", "city": "Casablanca", "category": "pizza", "latitude": 33.54094, "longitude": -7.607652}
+{"restaurant_id": "R-024", "name": "Le Tajine Zitoun Belvedere", "city": "Casablanca", "category": "marocain", "latitude": 33.547829, "longitude": -7.657273}
+{"restaurant_id": "R-025", "name": "Fresh Kitchen Maarif", "city": "Casablanca", "category": "healthy", "latitude": 33.543248, "longitude": -7.58057}
+{"restaurant_id": "R-026", "name": "Bab Fassia Gauthier", "city": "Casablanca", "category": "marocain", "latitude": 33.583789, "longitude": -7.585421}
+{"restaurant_id": "R-027", "name": "Bab Fassia Oasis", "city": "Casablanca", "category": "marocain", "latitude": 33.539082, "longitude": -7.586126}
+{"restaurant_id": "R-028", "name": "Burger Brothers Bourgogne", "city": "Casablanca", "category": "burger", "latitude": 33.569212, "longitude": -7.604141}
+{"restaurant_id": "R-029", "name": "Maki Kyoto Oasis", "city": "Casablanca", "category": "sushi", "latitude": 33.554832, "longitude": -7.625293}
+{"restaurant_id": "R-030", "name": "Dar Saada Belvedere", "city": "Casablanca", "category": "marocain", "latitude": 33.542112, "longitude": -7.650061}
+{"restaurant_id": "R-031", "name": "Burger Station Maarif", "city": "Casablanca", "category": "burger", "latitude": 33.57728, "longitude": -7.65008}
+{"restaurant_id": "R-032", "name": "Forno Del Sol Bourgogne", "city": "Casablanca", "category": "pizza", "latitude": 33.559658, "longitude": -7.558731}
+{"restaurant_id": "R-033", "name": "Bowl Life Bourgogne", "city": "Casablanca", "category": "healthy", "latitude": 33.573154, "longitude": -7.54695}
+{"restaurant_id": "R-034", "name": "Dar Mogador Sidi Maarouf", "city": "Casablanca", "category": "marocain", "latitude": 33.553297, "longitude": -7.594617}
+{"restaurant_id": "R-035", "name": "Sakura Bar Maarif", "city": "Casablanca", "category": "sushi", "latitude": 33.552144, "longitude": -7.612498}
+{"restaurant_id": "R-036", "name": "Green Kitchen Bourgogne", "city": "Casablanca", "category": "healthy", "latitude": 33.559496, "longitude": -7.640374}
+{"restaurant_id": "R-037", "name": "La Table Saada Gauthier", "city": "Casablanca", "category": "marocain", "latitude": 33.554372, "longitude": -7.539411}
+{"restaurant_id": "R-038", "name": "Burger Brothers Maarif", "city": "Casablanca", "category": "burger", "latitude": 33.583295, "longitude": -7.530309}
+{"restaurant_id": "R-039", "name": "Shawarma Corner Derb Sultan", "city": "Casablanca", "category": "shawarma", "latitude": 33.556475, "longitude": -7.538949}
+{"restaurant_id": "R-040", "name": "Green Life Maarif", "city": "Casablanca", "category": "healthy", "latitude": 33.584192, "longitude": -7.622872}
+{"restaurant_id": "R-041", "name": "Damas Grill Hay Hassani", "city": "Casablanca", "category": "shawarma", "latitude": 33.568313, "longitude": -7.557729}
+{"restaurant_id": "R-042", "name": "Beyrouth Corner Ain Diab", "city": "Casablanca", "category": "shawarma", "latitude": 33.540444, "longitude": -7.629522}
+{"restaurant_id": "R-043", "name": "Bab Zitoun Sidi Maarouf", "city": "Casablanca", "category": "marocain", "latitude": 33.533144, "longitude": -7.578215}
+{"restaurant_id": "R-044", "name": "Taco Factory Maarif", "city": "Casablanca", "category": "tacos", "latitude": 33.582843, "longitude": -7.648784}
+{"restaurant_id": "R-045", "name": "Le Tajine Yasmine Bourgogne", "city": "Casablanca", "category": "marocain", "latitude": 33.552208, "longitude": -7.528177}
+{"restaurant_id": "R-046", "name": "Grill Brothers Maarif", "city": "Casablanca", "category": "burger", "latitude": 33.564066, "longitude": -7.601309}
+{"restaurant_id": "R-047", "name": "Grill Lab Anfa", "city": "Casablanca", "category": "burger", "latitude": 33.541234, "longitude": -7.559733}
+{"restaurant_id": "R-048", "name": "Pizzeria Bella Anfa", "city": "Casablanca", "category": "pizza", "latitude": 33.555147, "longitude": -7.529937}
+{"restaurant_id": "R-049", "name": "Patisserie Sablee Belvedere", "city": "Casablanca", "category": "patisserie", "latitude": 33.584915, "longitude": -7.520546}
+{"restaurant_id": "R-050", "name": "Riad Nour Ain Diab", "city": "Casablanca", "category": "marocain", "latitude": 33.581329, "longitude": -7.536679}
+{"restaurant_id": "R-051", "name": "Fresh Factory Hassan", "city": "Rabat", "category": "healthy", "latitude": 33.976291, "longitude": -6.837407}
+{"restaurant_id": "R-052", "name": "Forno Vesuvio Agdal", "city": "Rabat", "category": "pizza", "latitude": 33.990072, "longitude": -6.836724}
+{"restaurant_id": "R-053", "name": "Patisserie Chebakia Hay Riad", "city": "Rabat", "category": "patisserie", "latitude": 33.956926, "longitude": -6.863578}
+{"restaurant_id": "R-054", "name": "Smash Lab Ocean", "city": "Rabat", "category": "burger", "latitude": 33.962638, "longitude": -6.849427}
+{"restaurant_id": "R-055", "name": "Maki Wave Souissi", "city": "Rabat", "category": "sushi", "latitude": 33.965067, "longitude": -6.81551}
+{"restaurant_id": "R-056", "name": "Bab Mogador Hay Riad", "city": "Rabat", "category": "marocain", "latitude": 33.952645, "longitude": -6.849987}
+{"restaurant_id": "R-057", "name": "Chez Andalous Akkari", "city": "Rabat", "category": "marocain", "latitude": 33.97651, "longitude": -6.82766}
+{"restaurant_id": "R-058", "name": "Burger Station Akkari", "city": "Rabat", "category": "burger", "latitude": 34.004236, "longitude": -6.837265}
+{"restaurant_id": "R-059", "name": "Beyrouth Express Souissi", "city": "Rabat", "category": "shawarma", "latitude": 33.957647, "longitude": -6.851504}
+{"restaurant_id": "R-060", "name": "Green Factory Hassan", "city": "Rabat", "category": "healthy", "latitude": 33.990924, "longitude": -6.829984}
+{"restaurant_id": "R-061", "name": "Forno Del Sol Ocean", "city": "Rabat", "category": "pizza", "latitude": 33.994969, "longitude": -6.814454}
+{"restaurant_id": "R-062", "name": "Pizza Bella Souissi", "city": "Rabat", "category": "pizza", "latitude": 33.951487, "longitude": -6.825806}
+{"restaurant_id": "R-063", "name": "Pizzeria Mamma Akkari", "city": "Rabat", "category": "pizza", "latitude": 33.998645, "longitude": -6.853992}
+{"restaurant_id": "R-064", "name": "Shawarma Corner Agdal", "city": "Rabat", "category": "shawarma", "latitude": 34.001516, "longitude": -6.856654}
+{"restaurant_id": "R-065", "name": "Damas Grill Hay Riad", "city": "Rabat", "category": "shawarma", "latitude": 33.999232, "longitude": -6.817721}
+{"restaurant_id": "R-066", "name": "Forno Bella Souissi", "city": "Rabat", "category": "pizza", "latitude": 33.969696, "longitude": -6.818139}
+{"restaurant_id": "R-067", "name": "Maison Gazelle Akkari", "city": "Rabat", "category": "patisserie", "latitude": 33.980564, "longitude": -6.829229}
+{"restaurant_id": "R-068", "name": "Damas Palace Agdal", "city": "Rabat", "category": "shawarma", "latitude": 34.002622, "longitude": -6.854327}
+{"restaurant_id": "R-069", "name": "Smash Station Agdal", "city": "Rabat", "category": "burger", "latitude": 33.985794, "longitude": -6.849259}
+{"restaurant_id": "R-070", "name": "Damas Palace Souissi", "city": "Rabat", "category": "shawarma", "latitude": 34.00397, "longitude": -6.858595}
+{"restaurant_id": "R-071", "name": "La Table Zitoun Ocean", "city": "Rabat", "category": "marocain", "latitude": 34.005535, "longitude": -6.837693}
+{"restaurant_id": "R-072", "name": "Sakura Time Hay Riad", "city": "Rabat", "category": "sushi", "latitude": 33.975878, "longitude": -6.813068}
+{"restaurant_id": "R-073", "name": "Bowl Factory Akkari", "city": "Rabat", "category": "healthy", "latitude": 34.000881, "longitude": -6.826815}
+{"restaurant_id": "R-074", "name": "Pizzeria Mamma Souissi", "city": "Rabat", "category": "pizza", "latitude": 33.969571, "longitude": -6.828167}
+{"restaurant_id": "R-075", "name": "Burger Spot Akkari", "city": "Rabat", "category": "burger", "latitude": 34.006422, "longitude": -6.829361}
+{"restaurant_id": "R-076", "name": "Bowl Factory Souissi", "city": "Rabat", "category": "healthy", "latitude": 33.982876, "longitude": -6.869976}
+{"restaurant_id": "R-077", "name": "Pizzeria Vesuvio Ocean", "city": "Rabat", "category": "pizza", "latitude": 33.989282, "longitude": -6.842101}
+{"restaurant_id": "R-078", "name": "Tacos Street Souissi", "city": "Rabat", "category": "tacos", "latitude": 33.997624, "longitude": -6.81241}
+{"restaurant_id": "R-079", "name": "Sakura Bar Hay Riad", "city": "Rabat", "category": "sushi", "latitude": 33.980927, "longitude": -6.832024}
+{"restaurant_id": "R-080", "name": "Pizza Mamma Hay Riad", "city": "Rabat", "category": "pizza", "latitude": 33.963478, "longitude": -6.858052}
+{"restaurant_id": "R-081", "name": "Riad Fassia Targa", "city": "Marrakech", "category": "marocain", "latitude": 31.65373, "longitude": -8.043445}
+{"restaurant_id": "R-082", "name": "Taco Street Hivernage", "city": "Marrakech", "category": "tacos", "latitude": 31.643876, "longitude": -8.015442}
+{"restaurant_id": "R-083", "name": "Pizza Mamma Daoudiate", "city": "Marrakech", "category": "pizza", "latitude": 31.590416, "longitude": -7.982413}
+{"restaurant_id": "R-084", "name": "Shawarma Corner Hivernage", "city": "Marrakech", "category": "shawarma", "latitude": 31.603192, "longitude": -7.963783}
+{"restaurant_id": "R-085", "name": "Tacos Street Hivernage", "city": "Marrakech", "category": "tacos", "latitude": 31.65881, "longitude": -8.039078}
+{"restaurant_id": "R-086", "name": "La Table Atlas Sidi Ghanem", "city": "Marrakech", "category": "marocain", "latitude": 31.635949, "longitude": -7.985265}
+{"restaurant_id": "R-087", "name": "Taco Corner Hivernage", "city": "Marrakech", "category": "tacos", "latitude": 31.645774, "longitude": -8.007279}
+{"restaurant_id": "R-088", "name": "Pizza Mamma Medina", "city": "Marrakech", "category": "pizza", "latitude": 31.647436, "longitude": -8.003083}
+{"restaurant_id": "R-089", "name": "Smash Spot Gueliz", "city": "Marrakech", "category": "burger", "latitude": 31.643516, "longitude": -8.028896}
+{"restaurant_id": "R-090", "name": "Forno Napoli Hivernage", "city": "Marrakech", "category": "pizza", "latitude": 31.601312, "longitude": -8.015527}
+{"restaurant_id": "R-091", "name": "Riad Yasmine Sidi Ghanem", "city": "Marrakech", "category": "marocain", "latitude": 31.62057, "longitude": -8.001165}
+{"restaurant_id": "R-092", "name": "Tacos Corner Sidi Ghanem", "city": "Marrakech", "category": "tacos", "latitude": 31.657863, "longitude": -7.997433}
+{"restaurant_id": "R-093", "name": "Sakura Kyoto Sidi Ghanem", "city": "Marrakech", "category": "sushi", "latitude": 31.590442, "longitude": -8.018342}
+{"restaurant_id": "R-094", "name": "Maki Wave Daoudiate", "city": "Marrakech", "category": "sushi", "latitude": 31.645098, "longitude": -7.978012}
+{"restaurant_id": "R-095", "name": "Fresh Kitchen Medina", "city": "Marrakech", "category": "healthy", "latitude": 31.622688, "longitude": -8.047388}
+{"restaurant_id": "R-096", "name": "Forno Del Sol Daoudiate", "city": "Marrakech", "category": "pizza", "latitude": 31.602378, "longitude": -8.007935}
+{"restaurant_id": "R-097", "name": "Le Tajine Zitoun Sidi Ghanem", "city": "Marrakech", "category": "marocain", "latitude": 31.634392, "longitude": -7.99033}
+{"restaurant_id": "R-098", "name": "La Table Andalous Sidi Ghanem", "city": "Marrakech", "category": "marocain", "latitude": 31.60363, "longitude": -8.026586}
+{"restaurant_id": "R-099", "name": "Pizzeria Roma Medina", "city": "Marrakech", "category": "pizza", "latitude": 31.647092, "longitude": -8.015879}
+{"restaurant_id": "R-100", "name": "Maki Zen Gueliz", "city": "Marrakech", "category": "sushi", "latitude": 31.625273, "longitude": -7.982588}
+{"restaurant_id": "R-101", "name": "Chez Saada Daoudiate", "city": "Marrakech", "category": "marocain", "latitude": 31.595146, "longitude": -7.963844}
+{"restaurant_id": "R-102", "name": "Dar Saada Hivernage", "city": "Marrakech", "category": "marocain", "latitude": 31.652942, "longitude": -7.99408}
+{"restaurant_id": "R-103", "name": "Pizzeria Mamma Gueliz", "city": "Marrakech", "category": "pizza", "latitude": 31.632298, "longitude": -8.030383}
+{"restaurant_id": "R-104", "name": "Maki Time Targa", "city": "Marrakech", "category": "sushi", "latitude": 31.635544, "longitude": -7.982687}
+{"restaurant_id": "R-105", "name": "Riad Nour Gueliz", "city": "Marrakech", "category": "marocain", "latitude": 31.633401, "longitude": -7.9664}
+{"restaurant_id": "R-106", "name": "Smash Spot Daoudiate", "city": "Marrakech", "category": "burger", "latitude": 31.604875, "longitude": -7.996711}
+{"restaurant_id": "R-107", "name": "Shawarma Palace Daoudiate", "city": "Marrakech", "category": "shawarma", "latitude": 31.647936, "longitude": -7.973474}
+{"restaurant_id": "R-108", "name": "Burger Brothers Gueliz", "city": "Marrakech", "category": "burger", "latitude": 31.61604, "longitude": -8.011446}
+{"restaurant_id": "R-109", "name": "Forno Mamma Medina", "city": "Marrakech", "category": "pizza", "latitude": 31.590949, "longitude": -8.012195}
+{"restaurant_id": "R-110", "name": "Le Tacos House Daoudiate", "city": "Marrakech", "category": "tacos", "latitude": 31.656868, "longitude": -8.008623}
+{"restaurant_id": "R-111", "name": "Riad Nour Atlas", "city": "Fes", "category": "marocain", "latitude": 34.046574, "longitude": -4.992328}
+{"restaurant_id": "R-112", "name": "Le Tacos Street Saiss", "city": "Fes", "category": "tacos", "latitude": 34.012561, "longitude": -5.012815}
+{"restaurant_id": "R-113", "name": "Maison Sablee Fes el Bali", "city": "Fes", "category": "patisserie", "latitude": 34.042533, "longitude": -4.990111}
+{"restaurant_id": "R-114", "name": "Maki Bar Narjiss", "city": "Fes", "category": "sushi", "latitude": 34.049567, "longitude": -5.017271}
+{"restaurant_id": "R-115", "name": "Chez Atlas Saiss", "city": "Fes", "category": "marocain", "latitude": 34.051622, "longitude": -4.980917}
+{"restaurant_id": "R-116", "name": "Pizza Vesuvio Fes el Bali", "city": "Fes", "category": "pizza", "latitude": 33.995993, "longitude": -4.979595}
+{"restaurant_id": "R-117", "name": "Tacos Corner Narjiss", "city": "Fes", "category": "tacos", "latitude": 34.021372, "longitude": -5.028793}
+{"restaurant_id": "R-118", "name": "Pizzeria Mamma Fes el Bali", "city": "Fes", "category": "pizza", "latitude": 34.011434, "longitude": -4.989291}
+{"restaurant_id": "R-119", "name": "Taco House Narjiss", "city": "Fes", "category": "tacos", "latitude": 34.059764, "longitude": -4.991473}
+{"restaurant_id": "R-120", "name": "Pizzeria Roma Saiss", "city": "Fes", "category": "pizza", "latitude": 34.007598, "longitude": -5.021554}
+{"restaurant_id": "R-121", "name": "Dar Andalous Fes el Bali", "city": "Fes", "category": "marocain", "latitude": 34.005147, "longitude": -4.996106}
+{"restaurant_id": "R-122", "name": "Sakura Wave Saiss", "city": "Fes", "category": "sushi", "latitude": 34.058636, "longitude": -4.971716}
+{"restaurant_id": "R-123", "name": "Pizzeria Bella Saiss", "city": "Fes", "category": "pizza", "latitude": 33.99099, "longitude": -4.992611}
+{"restaurant_id": "R-124", "name": "Pizza Vesuvio Saiss", "city": "Fes", "category": "pizza", "latitude": 34.038819, "longitude": -5.02116}
+{"restaurant_id": "R-125", "name": "Fresh Garden Ville Nouvelle", "city": "Fes", "category": "healthy", "latitude": 34.030184, "longitude": -4.997142}
+{"restaurant_id": "R-126", "name": "Tacos Express Saiss", "city": "Fes", "category": "tacos", "latitude": 34.055874, "longitude": -4.996559}
+{"restaurant_id": "R-127", "name": "Damas Corner Ville Nouvelle", "city": "Fes", "category": "shawarma", "latitude": 34.030391, "longitude": -4.981948}
+{"restaurant_id": "R-128", "name": "Le Tajine Nour Ville Nouvelle", "city": "Fes", "category": "marocain", "latitude": 34.059574, "longitude": -5.021708}
+{"restaurant_id": "R-129", "name": "Beyrouth Express Atlas", "city": "Fes", "category": "shawarma", "latitude": 34.016626, "longitude": -4.966405}
+{"restaurant_id": "R-130", "name": "Forno Del Sol Saiss", "city": "Fes", "category": "pizza", "latitude": 34.029804, "longitude": -5.025784}
+{"restaurant_id": "R-131", "name": "Patisserie Chebakia Fes el Bali", "city": "Fes", "category": "patisserie", "latitude": 34.008525, "longitude": -5.024317}
+{"restaurant_id": "R-132", "name": "Forno Napoli Fes el Bali", "city": "Fes", "category": "pizza", "latitude": 33.990187, "longitude": -4.998465}
+{"restaurant_id": "R-133", "name": "Smash Station Centre", "city": "Tanger", "category": "burger", "latitude": 35.739405, "longitude": -5.843037}
+{"restaurant_id": "R-134", "name": "Shawarma Express Marshan", "city": "Tanger", "category": "shawarma", "latitude": 35.764391, "longitude": -5.822497}
+{"restaurant_id": "R-135", "name": "Sushi Kyoto Malabata", "city": "Tanger", "category": "sushi", "latitude": 35.752228, "longitude": -5.821142}
+{"restaurant_id": "R-136", "name": "Green Garden Malabata", "city": "Tanger", "category": "healthy", "latitude": 35.733296, "longitude": -5.841543}
+{"restaurant_id": "R-137", "name": "Sakura Zen Iberia", "city": "Tanger", "category": "sushi", "latitude": 35.731218, "longitude": -5.818679}
+{"restaurant_id": "R-138", "name": "Maki Wave Boukhalef", "city": "Tanger", "category": "sushi", "latitude": 35.74969, "longitude": -5.855173}
+{"restaurant_id": "R-139", "name": "La Table Atlas Boukhalef", "city": "Tanger", "category": "marocain", "latitude": 35.737518, "longitude": -5.85452}
+{"restaurant_id": "R-140", "name": "Douceurs Miel Malabata", "city": "Tanger", "category": "patisserie", "latitude": 35.774979, "longitude": -5.819663}
+{"restaurant_id": "R-141", "name": "Pizza Bella Iberia", "city": "Tanger", "category": "pizza", "latitude": 35.750948, "longitude": -5.833466}
+{"restaurant_id": "R-142", "name": "Forno Del Sol Iberia", "city": "Tanger", "category": "pizza", "latitude": 35.773453, "longitude": -5.831799}
+{"restaurant_id": "R-143", "name": "Le Tacos Express Centre", "city": "Tanger", "category": "tacos", "latitude": 35.74149, "longitude": -5.81838}
+{"restaurant_id": "R-144", "name": "Pizzeria Vesuvio Malabata", "city": "Tanger", "category": "pizza", "latitude": 35.747741, "longitude": -5.841129}
+{"restaurant_id": "R-145", "name": "Forno Vesuvio Iberia", "city": "Tanger", "category": "pizza", "latitude": 35.745662, "longitude": -5.848745}
+{"restaurant_id": "R-146", "name": "Pizzeria Mamma Iberia", "city": "Tanger", "category": "pizza", "latitude": 35.763, "longitude": -5.847787}
+{"restaurant_id": "R-147", "name": "Smash Spot Iberia", "city": "Tanger", "category": "burger", "latitude": 35.731071, "longitude": -5.801611}
+{"restaurant_id": "R-148", "name": "Burger Club Marshan", "city": "Tanger", "category": "burger", "latitude": 35.752542, "longitude": -5.826865}
+{"restaurant_id": "R-149", "name": "Dar Fassia Malabata", "city": "Tanger", "category": "marocain", "latitude": 35.757385, "longitude": -5.850762}
+{"restaurant_id": "R-150", "name": "Maison Miel Marshan", "city": "Tanger", "category": "patisserie", "latitude": 35.745775, "longitude": -5.83105}
+{"restaurant_id": "R-151", "name": "Le Tacos Street Centre", "city": "Tanger", "category": "tacos", "latitude": 35.744179, "longitude": -5.804688}
+{"restaurant_id": "R-152", "name": "Tacos Express Marshan", "city": "Tanger", "category": "tacos", "latitude": 35.763634, "longitude": -5.808735}
+{"restaurant_id": "R-153", "name": "Forno Roma Malabata", "city": "Tanger", "category": "pizza", "latitude": 35.739142, "longitude": -5.842087}
+{"restaurant_id": "R-154", "name": "Grill Spot Centre", "city": "Tanger", "category": "burger", "latitude": 35.747327, "longitude": -5.83094}
+{"restaurant_id": "R-155", "name": "Forno Del Sol Dakhla", "city": "Agadir", "category": "pizza", "latitude": 30.436643, "longitude": -9.53652}
+{"restaurant_id": "R-156", "name": "Patisserie Miel Dakhla", "city": "Agadir", "category": "patisserie", "latitude": 30.401678, "longitude": -9.541223}
+{"restaurant_id": "R-157", "name": "Bab Fassia Dakhla", "city": "Agadir", "category": "marocain", "latitude": 30.409304, "longitude": -9.546816}
+{"restaurant_id": "R-158", "name": "Shawarma Corner Talborjt", "city": "Agadir", "category": "shawarma", "latitude": 30.396312, "longitude": -9.531732}
+{"restaurant_id": "R-159", "name": "Pizza Del Sol Talborjt", "city": "Agadir", "category": "pizza", "latitude": 30.416298, "longitude": -9.557154}
+{"restaurant_id": "R-160", "name": "Maki Time Talborjt", "city": "Agadir", "category": "sushi", "latitude": 30.413475, "longitude": -9.53154}
+{"restaurant_id": "R-161", "name": "Forno Del Sol Talborjt", "city": "Agadir", "category": "pizza", "latitude": 30.432588, "longitude": -9.537383}
+{"restaurant_id": "R-162", "name": "Damas Grill Dakhla", "city": "Agadir", "category": "shawarma", "latitude": 30.433619, "longitude": -9.578205}
+{"restaurant_id": "R-163", "name": "Bab Nour Founty", "city": "Agadir", "category": "marocain", "latitude": 30.427338, "longitude": -9.558301}
+{"restaurant_id": "R-164", "name": "Bab Yasmine Dakhla", "city": "Agadir", "category": "marocain", "latitude": 30.398318, "longitude": -9.565027}
+{"restaurant_id": "R-165", "name": "Chez Zitoun Hay Mohammadi", "city": "Agadir", "category": "marocain", "latitude": 30.407923, "longitude": -9.558466}
+{"restaurant_id": "R-166", "name": "Pizzeria Vesuvio Founty", "city": "Agadir", "category": "pizza", "latitude": 30.398499, "longitude": -9.576052}
+{"restaurant_id": "R-167", "name": "Bowl Kitchen Dakhla", "city": "Agadir", "category": "healthy", "latitude": 30.435641, "longitude": -9.572844}
+{"restaurant_id": "R-168", "name": "Le Tacos Corner Hay Mohammadi", "city": "Agadir", "category": "tacos", "latitude": 30.423342, "longitude": -9.535055}
+{"restaurant_id": "R-169", "name": "Le Tacos Street Founty", "city": "Agadir", "category": "tacos", "latitude": 30.393693, "longitude": -9.532738}
+{"restaurant_id": "R-170", "name": "Maison Sablee Hay Mohammadi", "city": "Agadir", "category": "patisserie", "latitude": 30.412842, "longitude": -9.564894}
+{"restaurant_id": "R-171", "name": "Maison Amandine Founty", "city": "Agadir", "category": "patisserie", "latitude": 30.409068, "longitude": -9.562052}
+{"restaurant_id": "R-172", "name": "Forno Roma Talborjt", "city": "Agadir", "category": "pizza", "latitude": 30.438897, "longitude": -9.547089}
+{"restaurant_id": "R-173", "name": "Forno Mamma Hamria", "city": "Meknes", "category": "pizza", "latitude": 33.910531, "longitude": -5.52529}
+{"restaurant_id": "R-174", "name": "Damas Express Medina", "city": "Meknes", "category": "shawarma", "latitude": 33.87595, "longitude": -5.558592}
+{"restaurant_id": "R-175", "name": "Forno Mamma Ville Nouvelle", "city": "Meknes", "category": "pizza", "latitude": 33.896412, "longitude": -5.515796}
+{"restaurant_id": "R-176", "name": "Smash Spot Hamria", "city": "Meknes", "category": "burger", "latitude": 33.893979, "longitude": -5.526058}
+{"restaurant_id": "R-177", "name": "Chez Atlas Marjane", "city": "Meknes", "category": "marocain", "latitude": 33.873782, "longitude": -5.56207}
+{"restaurant_id": "R-178", "name": "Le Tacos Street Medina", "city": "Meknes", "category": "tacos", "latitude": 33.906524, "longitude": -5.554582}
+{"restaurant_id": "R-179", "name": "Damas Grill Medina", "city": "Meknes", "category": "shawarma", "latitude": 33.905212, "longitude": -5.5419}
+{"restaurant_id": "R-180", "name": "Riad Mogador Medina", "city": "Meknes", "category": "marocain", "latitude": 33.869515, "longitude": -5.546326}
+{"restaurant_id": "R-181", "name": "Pizza Del Sol Medina", "city": "Meknes", "category": "pizza", "latitude": 33.898641, "longitude": -5.52966}
+{"restaurant_id": "R-182", "name": "Grill Lab Hamria", "city": "Meknes", "category": "burger", "latitude": 33.898742, "longitude": -5.541711}
+{"restaurant_id": "R-183", "name": "Grill Lab Ville Nouvelle", "city": "Meknes", "category": "burger", "latitude": 33.897383, "longitude": -5.531876}
+{"restaurant_id": "R-184", "name": "Taco House Marjane", "city": "Meknes", "category": "tacos", "latitude": 33.870834, "longitude": -5.567279}
+{"restaurant_id": "R-185", "name": "La Table Yasmine Hamria", "city": "Meknes", "category": "marocain", "latitude": 33.87674, "longitude": -5.537747}
+{"restaurant_id": "R-186", "name": "Pizzeria Mamma Marjane", "city": "Meknes", "category": "pizza", "latitude": 33.894367, "longitude": -5.526404}
+{"restaurant_id": "R-187", "name": "Bowl Garden Sidi Yahya", "city": "Oujda", "category": "healthy", "latitude": 34.686548, "longitude": -1.888047}
+{"restaurant_id": "R-188", "name": "Forno Roma Lazaret", "city": "Oujda", "category": "pizza", "latitude": 34.680518, "longitude": -1.887472}
+{"restaurant_id": "R-189", "name": "Shawarma Grill Al Qods", "city": "Oujda", "category": "shawarma", "latitude": 34.667119, "longitude": -1.921206}
+{"restaurant_id": "R-190", "name": "Maison Amandine Lazaret", "city": "Oujda", "category": "patisserie", "latitude": 34.68746, "longitude": -1.905143}
+{"restaurant_id": "R-191", "name": "Chez Saada Lazaret", "city": "Oujda", "category": "marocain", "latitude": 34.692544, "longitude": -1.92474}
+{"restaurant_id": "R-192", "name": "Beyrouth Express Lazaret", "city": "Oujda", "category": "shawarma", "latitude": 34.693457, "longitude": -1.92335}
+{"restaurant_id": "R-193", "name": "Beyrouth Palace Al Qods", "city": "Oujda", "category": "shawarma", "latitude": 34.695044, "longitude": -1.927766}
+{"restaurant_id": "R-194", "name": "Chez Andalous Centre", "city": "Oujda", "category": "marocain", "latitude": 34.688137, "longitude": -1.933711}
+{"restaurant_id": "R-195", "name": "Riad Atlas Centre", "city": "Oujda", "category": "marocain", "latitude": 34.671099, "longitude": -1.93238}
+{"restaurant_id": "R-196", "name": "Sakura Bar Centre", "city": "Oujda", "category": "sushi", "latitude": 34.681669, "longitude": -1.896099}
+{"restaurant_id": "R-197", "name": "Tacos Corner Lazaret", "city": "Oujda", "category": "tacos", "latitude": 34.69809, "longitude": -1.932832}
+{"restaurant_id": "R-198", "name": "Beyrouth Grill Sidi Yahya", "city": "Oujda", "category": "shawarma", "latitude": 34.687517, "longitude": -1.933442}
+{"restaurant_id": "R-199", "name": "Maison Sablee Centre", "city": "Oujda", "category": "patisserie", "latitude": 34.682159, "longitude": -1.889515}
+{"restaurant_id": "R-200", "name": "Dar Atlas Lazaret", "city": "Oujda", "category": "marocain", "latitude": 34.667299, "longitude": -1.921249}

@@ -1,0 +1,31 @@
+## generate_restaurants.py --seed 42
+200 restaurants écrits dans /workspace/data/restaurants.json (seed=42)
+
+## Reproductibilité (seed 42 vs seed 42 vs seed 7)
+8cac39b13a7f07d1ab4652435623e572acd435ae038f4da798bbd984af72c007  data/restaurants.json
+8cac39b13a7f07d1ab4652435623e572acd435ae038f4da798bbd984af72c007  /tmp/r42.json
+7102d0678ce9bf3e67053070ab1dc0efa6cf0e4cb59e9012aa9b63c5aa869084  /tmp/r7.json
+
+## Aperçu
+{"restaurant_id": "R-001", "name": "Burger Lab Bourgogne", "city": "Casablanca", "category": "burger", "latitude": 33.542277, "longitude": -7.556894}
+{"restaurant_id": "R-002", "name": "Sakura Bar Belvedere", "city": "Casablanca", "category": "sushi", "latitude": 33.553206, "longitude": -7.655828}
+{"restaurant_id": "R-003", "name": "Le Tajine Zitoun Oasis", "city": "Casablanca", "category": "marocain", "latitude": 33.540936, "longitude": -7.569016}
+
+## validate_generated_data.py --restaurants
+
+=== Référentiel data/restaurants.json
+  [OK] 200 restaurants exactement — 200 lignes
+  [OK] champs exacts et ordonnés — restaurant_id, name, city, category, latitude, longitude
+  [OK] restaurant_id uniques
+  [OK] restaurant_id séquentiels R-001..R-200
+  [OK] noms uniques et non vides
+  [OK] catégories connues — burger, healthy, marocain, patisserie, pizza, shawarma, sushi, tacos
+  [OK] villes connues
+  [OK] types numériques des coordonnées
+  [OK] coordonnées dans l'emprise urbaine de leur ville — hors emprise : []
+  [OK] coordonnées au Maroc (lat 27..36, lon -13..-1)
+  par ville     : {'Casablanca': 50, 'Rabat': 30, 'Marrakech': 30, 'Fes': 22, 'Tanger': 22, 'Agadir': 18, 'Meknes': 14, 'Oujda': 14}
+  par catégorie : {'burger': 22, 'sushi': 21, 'marocain': 42, 'shawarma': 23, 'tacos': 21, 'pizza': 44, 'healthy': 14, 'patisserie': 13}
+
+=== BILAN : 10/10 contrôles OK
+EXIT=0

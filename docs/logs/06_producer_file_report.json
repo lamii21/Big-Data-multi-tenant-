@@ -1,0 +1,184 @@
+{
+  "checks": [
+    {
+      "name": "200 restaurants exactement",
+      "ok": true,
+      "detail": "200 lignes"
+    },
+    {
+      "name": "champs exacts et ordonnés",
+      "ok": true,
+      "detail": "restaurant_id, name, city, category, latitude, longitude"
+    },
+    {
+      "name": "restaurant_id uniques",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "restaurant_id séquentiels R-001..R-200",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "noms uniques et non vides",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "catégories connues",
+      "ok": true,
+      "detail": "burger, healthy, marocain, patisserie, pizza, shawarma, sushi, tacos"
+    },
+    {
+      "name": "villes connues",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "types numériques des coordonnées",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "coordonnées dans l'emprise urbaine de leur ville",
+      "ok": true,
+      "detail": "hors emprise : []"
+    },
+    {
+      "name": "coordonnées au Maroc (lat 27..36, lon -13..-1)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "schéma : 10 champs exacts et ordonnés",
+      "ok": true,
+      "detail": "0 écarts"
+    },
+    {
+      "name": "types (str / float / int) conformes",
+      "ok": true,
+      "detail": "0 écarts"
+    },
+    {
+      "name": "formats (ORD-NNNNNNN, R-NNN, C-NNNNN, L-XXX-NN, ISO-8601 Z)",
+      "ok": true,
+      "detail": "{}"
+    },
+    {
+      "name": "statuts dans {CREATED, PICKED_UP, DELIVERED, CANCELLED}",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "bornes : amount_mad > 0, 1 <= items_count <= 10, 0 < distance_km <= 20",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "restaurant_id présents dans restaurants.json",
+      "ok": true,
+      "detail": "inconnus : []"
+    },
+    {
+      "name": "city = ville du restaurant",
+      "ok": true,
+      "detail": "0 écarts"
+    },
+    {
+      "name": "code ville du livreur cohérent (L-CAS-.. à Casablanca)",
+      "ok": true,
+      "detail": "0 écarts"
+    },
+    {
+      "name": "doublons = copies exactes (aucune collision d'identifiant)",
+      "ok": true,
+      "detail": "0 collisions"
+    },
+    {
+      "name": "attributs de commande identiques dans tous ses événements",
+      "ok": true,
+      "detail": "0 commandes"
+    },
+    {
+      "name": "transitions de statut valides et chronologiques",
+      "ok": true,
+      "detail": "0 commandes invalides"
+    },
+    {
+      "name": "nombre de commandes = 50000",
+      "ok": true,
+      "detail": "50000 trouvées"
+    },
+    {
+      "name": "order_id contigus (aucun trou ni réutilisation)",
+      "ok": true,
+      "detail": "ORD-0000001 .. ORD-0050000"
+    },
+    {
+      "name": "retard maximal <= 15 min",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "taux de retards ~5 % (3,5 % - 6,5 %)",
+      "ok": true,
+      "detail": "4.92%"
+    },
+    {
+      "name": "taux de doublons ~2 % (1,4 % - 2,6 %)",
+      "ok": true,
+      "detail": "2.02%"
+    }
+  ],
+  "metrics": {
+    "restaurants_by_city": {
+      "Casablanca": 50,
+      "Rabat": 30,
+      "Marrakech": 30,
+      "Fes": 22,
+      "Tanger": 22,
+      "Agadir": 18,
+      "Meknes": 14,
+      "Oujda": 14
+    },
+    "restaurants_by_category": {
+      "burger": 22,
+      "sushi": 21,
+      "marocain": 42,
+      "shawarma": 23,
+      "tacos": 21,
+      "pizza": 44,
+      "healthy": 14,
+      "patisserie": 13
+    },
+    "lines": 150281,
+    "duplicates": 3037,
+    "duplicate_rate": 0.0202,
+    "sequences": {
+      "CREATED -> PICKED_UP -> DELIVERED": 46028,
+      "CREATED -> CANCELLED": 2756,
+      "CREATED -> PICKED_UP -> CANCELLED": 1216
+    },
+    "orders": 50000,
+    "late": 7246,
+    "late_rate": 0.0492,
+    "late_over_10min": 2425,
+    "max_lag_min": 14.98,
+    "delivered_amount_mad": {
+      "min": 25.22,
+      "median": 164.47,
+      "max": 757.46,
+      "mean": 191.18
+    },
+    "distance_bands_delivered": {
+      "moyen": 21833,
+      "court": 12405,
+      "long": 11790
+    },
+    "event_time_range": [
+      1790809223.0,
+      1793403900.0
+    ]
+  }
+}

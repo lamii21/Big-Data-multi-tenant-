@@ -1,0 +1,142 @@
+## producer.py --help
+usage: producer.py [-h] --mode {file,kafka} [--n N] [--seed SEED]
+                   [--restaurants RESTAURANTS] [--late-ratio LATE_RATIO]
+                   [--max-late-minutes MAX_LATE_MINUTES]
+                   [--dup-ratio DUP_RATIO] [--cancel-ratio CANCEL_RATIO]
+                   [--output OUTPUT] [--start START] [--days DAYS]
+                   [--bootstrap BOOTSTRAP] [--topic TOPIC] [--rate RATE]
+                   [--duration DURATION] [--time-scale TIME_SCALE]
+                   [--start-id START_ID]
+
+RECONSTITUTION du générateur de commandes (fichier du professeur non fourni).
+
+options:
+  -h, --help            show this help message and exit
+  --mode {file,kafka}   file = historique JSON Lines ; kafka = flux continu
+                        vers le topic (default: None)
+  --n N                 nombre de COMMANDES (file : défaut 50000 ; kafka :
+                        illimité) (default: None)
+  --seed SEED           graine aléatoire (reproductibilité) (default: 42)
+  --restaurants RESTAURANTS
+                        référentiel des restaurants (JSON Lines ou tableau
+                        JSON) (default: /workspace/data/restaurants.json)
+  --late-ratio LATE_RATIO
+                        proportion d'événements émis en retard (default: 0.05)
+  --max-late-minutes MAX_LATE_MINUTES
+                        retard maximal d'un événement (minutes, retard minimal
+                        = 1) (default: 15.0)
+  --dup-ratio DUP_RATIO
+                        proportion d'événements ré-émis en doublon (default:
+                        0.02)
+  --cancel-ratio CANCEL_RATIO
+                        proportion de commandes annulées (default: 0.08)
+
+mode file:
+  --output OUTPUT       fichier de sortie (un fichier .stats.json est écrit à
+                        côté) (default:
+                        /workspace/data/generated/orders_history.jsonl)
+  --start START         début de la période simulée (UTC) (default:
+                        2026-10-01T00:00:00Z)
+  --days DAYS           durée de la période simulée (jours) (default: 30)
+
+mode kafka:
+  --bootstrap BOOTSTRAP
+                        serveurs Kafka (env KAFKA_BOOTSTRAP) (default:
+                        kafka:9092)
+  --topic TOPIC         topic cible (default: orders)
+  --rate RATE           débit cible en événements par seconde (default: 20)
+  --duration DURATION   durée en secondes (0 = jusqu'à Ctrl+C) (default: 0)
+  --time-scale TIME_SCALE
+                        accélération du cycle de vie (10 = livraisons 10x plus
+                        rapides) ; les retards réseau et doublons restent en
+                        temps réel (default: 1.0)
+  --start-id START_ID   premier numéro de commande (défaut : reprise du
+                        fichier d'état, sinon 1000000) (default: None)
+
+## producer.py --mode file --n 50000 (seed 42)
+50000 commandes -> 150281 lignes écrites dans /workspace/data/generated/orders_history.jsonl
+{
+  "generator": "producer.py (RECONSTITUTION)",
+  "mode": "file",
+  "seed": 42,
+  "orders": 50000,
+  "events_original": 147244,
+  "lines_written": 150281,
+  "late_injected": 7335,
+  "late_over_10min": 2590,
+  "duplicates_injected": 3037,
+  "status_counts": {
+    "CREATED": 50000,
+    "PICKED_UP": 47244,
+    "DELIVERED": 46028,
+    "CANCELLED": 3972
+  },
+  "start": "2026-10-01T00:00:00Z",
+  "days": 30,
+  "late_ratio": 0.05,
+  "dup_ratio": 0.02,
+  "cancel_ratio": 0.08
+}
+durée: 29.1 s
+
+## Reproductibilité (fichier principal vs 2e exécution seed 42 vs seed 7)
+57142d2dce9a7c62af57ad79b068882fdb107c1ab32bf6d305c073e2c6adad25  data/generated/orders_history.jsonl
+57142d2dce9a7c62af57ad79b068882fdb107c1ab32bf6d305c073e2c6adad25  /tmp/h42.jsonl
+31037f3d1cf64c92ad5b189fbd9b3808d45d682157f6b6954ba3dd9371f7dc38  /tmp/h7.jsonl
+150281 data/generated/orders_history.jsonl
+total 33M
+-rw-r--r-- 1 spark spark 33M Nov 14 17:06 orders_history.jsonl
+-rw-r--r-- 1 spark spark 473 Nov 14 17:06 orders_history.stats.json
+
+## Aperçu (5 premières lignes)
+{"order_id":"ORD-0000001","restaurant_id":"R-107","customer_id":"C-10039","city":"Marrakech","status":"CREATED","amount_mad":114.41,"items_count":2,"distance_km":12.6,"courier_id":"L-MAR-05","event_time":"2026-09-30T23:00:23Z"}
+{"order_id":"ORD-0000002","restaurant_id":"R-153","customer_id":"C-18960","city":"Tanger","status":"CREATED","amount_mad":299.32,"items_count":4,"distance_km":9.8,"courier_id":"L-TAN-22","event_time":"2026-09-30T23:00:28Z"}
+{"order_id":"ORD-0000003","restaurant_id":"R-158","customer_id":"C-00956","city":"Agadir","status":"CREATED","amount_mad":62.18,"items_count":1,"distance_km":2.0,"courier_id":"L-AGA-18","event_time":"2026-09-30T23:06:05Z"}
+{"order_id":"ORD-0000004","restaurant_id":"R-165","customer_id":"C-01379","city":"Agadir","status":"CREATED","amount_mad":87.55,"items_count":1,"distance_km":4.8,"courier_id":"L-AGA-08","event_time":"2026-09-30T23:07:18Z"}
+{"order_id":"ORD-0000002","restaurant_id":"R-153","customer_id":"C-18960","city":"Tanger","status":"PICKED_UP","amount_mad":299.32,"items_count":4,"distance_km":9.8,"courier_id":"L-TAN-22","event_time":"2026-09-30T23:15:03Z"}
+
+## Validation
+
+=== Référentiel data/restaurants.json
+  [OK] 200 restaurants exactement — 200 lignes
+  [OK] champs exacts et ordonnés — restaurant_id, name, city, category, latitude, longitude
+  [OK] restaurant_id uniques
+  [OK] restaurant_id séquentiels R-001..R-200
+  [OK] noms uniques et non vides
+  [OK] catégories connues — burger, healthy, marocain, patisserie, pizza, shawarma, sushi, tacos
+  [OK] villes connues
+  [OK] types numériques des coordonnées
+  [OK] coordonnées dans l'emprise urbaine de leur ville — hors emprise : []
+  [OK] coordonnées au Maroc (lat 27..36, lon -13..-1)
+  par ville     : {'Casablanca': 50, 'Rabat': 30, 'Marrakech': 30, 'Fes': 22, 'Tanger': 22, 'Agadir': 18, 'Meknes': 14, 'Oujda': 14}
+  par catégorie : {'burger': 22, 'sushi': 21, 'marocain': 42, 'shawarma': 23, 'tacos': 21, 'pizza': 44, 'healthy': 14, 'patisserie': 13}
+
+=== Événements data/generated/orders_history.jsonl (format=jsonl, commandes complètes attendues=True)
+  150281 messages lus
+  [OK] schéma : 10 champs exacts et ordonnés — 0 écarts
+  [OK] types (str / float / int) conformes — 0 écarts
+  [OK] formats (ORD-NNNNNNN, R-NNN, C-NNNNN, L-XXX-NN, ISO-8601 Z) — {}
+  [OK] statuts dans {CREATED, PICKED_UP, DELIVERED, CANCELLED}
+  [OK] bornes : amount_mad > 0, 1 <= items_count <= 10, 0 < distance_km <= 20
+  [OK] restaurant_id présents dans restaurants.json — inconnus : []
+  [OK] city = ville du restaurant — 0 écarts
+  [OK] code ville du livreur cohérent (L-CAS-.. à Casablanca) — 0 écarts
+  [OK] doublons = copies exactes (aucune collision d'identifiant) — 0 collisions
+  [OK] attributs de commande identiques dans tous ses événements — 0 commandes
+  [OK] transitions de statut valides et chronologiques — 0 commandes invalides
+        46028  CREATED -> PICKED_UP -> DELIVERED
+         2756  CREATED -> CANCELLED
+         1216  CREATED -> PICKED_UP -> CANCELLED
+  [OK] nombre de commandes = 50000 — 50000 trouvées
+  [OK] order_id contigus (aucun trou ni réutilisation) — ORD-0000001 .. ORD-0050000
+  retards (> 45s) : 7246 / 147244 = 4.92% ; > 10 min : 2425 ; retard max = 14.98 min
+  doublons      : 3037 / 150281 = 2.02%
+  [OK] retard maximal <= 15 min
+  [OK] taux de retards ~5 % (3,5 % - 6,5 %) — 4.92%
+  [OK] taux de doublons ~2 % (1,4 % - 2,6 %) — 2.02%
+  montant livré (MAD) : {'min': 25.22, 'median': 164.47, 'max': 757.46, 'mean': 191.18}
+  bandes de distance  : {'moyen': 21833, 'court': 12405, 'long': 11790}
+  période : 2026-09-30 23:00:23 -> 2026-10-30 23:45:00
+
+=== BILAN : 26/26 contrôles OK
+EXIT=0
